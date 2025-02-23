@@ -10,22 +10,85 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	extends <http://bipm.org/jcgm/vim4#> as vim4
 	extends <http://opencaesar.io/firesat-telecom/vocabulary/constraint#> as constraint
 	
+	uses <http://iso.org/iso-80000-3.1#> as iso-80000-3.1
 	uses <http://iso.org/iso-80000-3.15#> as iso-80000-3.15
 
 	//
+	//
+	//
 	// Downlink Arrangement
+	//
+	//
 	//
 	
 	concept DownlinkArrangement < mission:Component, vim4:Object [
-		//restricts some inverseOf(vim4:characterizes) to OperatingFrequency
 		restricts hasOperatingFrequency to exactly 1
+		restricts hasSpacePathLength to exactly 1
+		restricts hasBitRate to exactly 1
 		restricts hasEncodingScheme to exactly 1
 		restricts hasBitErrorRate to exactly 1
+		restricts hasSpaceLoss to exactly 1
+		restricts hasIrradiance to exactly 1
 		restricts hasEbOverN0 to exactly 1
 		restricts hasMinEbOverN0 to exactly 1
+		restricts hasInformationRate to exactly 1
 		restricts hasLinkMargin to exactly 1
 	]
 	
+	//
+	//
+	// Asserted Quantities
+	//
+	//
+	
+	//
+	// Frequency
+	//
+	
+	concept Frequency < vim4:IndividualUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.15:frequency
+		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	relation entity IsOperatingFrequencyOf [
+		from Frequency
+		to DownlinkArrangement
+		forward isOperatingFrequencyOf
+		reverse hasOperatingFrequency
+	] < vim4:Characterizes
+	
+	//
+	// Space Path Length
+	//
+	
+	concept SpacePathLength < vim4:IndividualUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.1:length-of-path
+		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	relation entity IsSpacePathLengthOf [
+		from SpacePathLength
+		to DownlinkArrangement
+		forward isSpacePathLengthOf
+		reverse hasSpacePathLength
+	] < vim4:Characterizes
+	
+	//
+	// Bit Rate
+	//
+	
+	concept BitRate < vim4:IndividualUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.15:frequency
+		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	relation entity IsBitRateOf [
+		from BitRate
+		to DownlinkArrangement
+		forward isBitRateOf
+		reverse hasBitRate
+	] < vim4:Characterizes
+
 	//
 	// Encoding Scheme
 	//
@@ -39,22 +102,6 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	]
 	
 	//
-	// Operating Frequency
-	//
-	
-	concept OperatingFrequency < vim4:IndividualUnitaryQuantity [
-		restricts vim4:instantiates to iso-80000-3.15:frequency
-		restricts all vim4:characterizes to DownlinkArrangement
-	]
-	
-	relation entity HasOperatingFrequency [
-		from DownlinkArrangement
-		to OperatingFrequency
-		forward hasOperatingFrequency
-		functional
-	]
-
-	//
 	// Bit Error Rate
 	//
 	
@@ -63,13 +110,79 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
 	
-	relation entity HasBitErrorRate [
-		from DownlinkArrangement
-		to BitErrorRate
-		forward hasBitErrorRate
-		functional
-	]
+	relation entity IsBitErrorRateOf [
+		from BitErrorRate
+		to DownlinkArrangement
+		forward isBitErrorRateOf
+		reverse hasBitErrorRate
+	] < vim4:Characterizes
 
+	//
+	//
+	// Causally-Constrained Quantities
+	//
+	//
+	
+	//
+	// Space Loss
+	//
+	
+	concept SpaceLoss < vim4:IndividualUnitaryQuantity [
+		// dimension one
+		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	relation entity IsSpaceLossOf [
+		from SpaceLoss
+		to DownlinkArrangement
+		forward isSpaceLossOf
+		reverse hasSpaceLoss
+	] < vim4:Characterizes
+	
+	@rdfs:label "L_s"
+	concept SpaceLossCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 SpaceLoss
+		restricts analysis:analyzes to exactly 2
+		restricts analyzesLength to exactly 1 SpacePathLength
+		restricts analyzesFrequency to exactly 1 Frequency
+	]
+	
+	relation explainsSpaceLoss < constraint:explainsQuantity
+	@rdfs:label "S"
+	relation analyzesLength < constraint:analyzesQuantity
+	@rdfs:label "f"
+	relation analyzesFrequency < constraint:analyzesQuantity
+	
+	//
+	// Irradiance
+	//
+	
+	concept Irradiance < vim4:IndividualUnitaryQuantity [
+		// dimension M * T^-3
+		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	relation entity IsIrradianceOf [
+		from Irradiance
+		to DownlinkArrangement
+		forward isIrradianceOf
+		reverse hasIrradiance
+	] < vim4:Characterizes
+
+	@rdfs:label "E_e"
+	concept IrradianceConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 Irradiance
+		restricts analysis:analyzes to exactly 2
+		restricts analyzesEffectivePower to exactly 1 EffectiveIsotropicRadiatedPower
+		restricts analyzesSpaceLoss to exactly 1 SpaceLoss
+	]
+	
+	relation explainsIrradiance < constraint:explainsQuantity
+	@rdfs:label "P_o"
+	relation analyzesEffectivePower < constraint:analyzesQuantity
+	@rdfs:label "L_s"
+	relation analyzesSpaceLoss < constraint:analyzesQuantity
+	
 	//
 	// Eb/N0
 	//
@@ -79,15 +192,28 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
 	
-	relation entity HasEbOverN0 [
-		from DownlinkArrangement
-		to EbOverN0
-		forward hasEbOverN0
-		functional
-	]
+	relation entity IsEbOverN0Of [
+		from EbOverN0
+		to DownlinkArrangement
+		forward isEbOverN0Of
+		reverse hasEbOverN0
+	] < vim4:Characterizes
 
+	@rdfs:label "Eb_N0"
+	concept EbOverN0CausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 EbOverN0
+		restricts analyzesIrradiance to exactly 1 Irradiance
+		restricts all analyzesGOverT to GainOverSystemNoiseTemperature
+	]
+	
+	relation explainsEbOverN0 < constraint:explainsQuantity
+	@rdfs:label "E_e"
+	relation analyzesIrradiance < constraint:analyzesQuantity
+	@rdfs:label "G/T"
+	relation analyzesGOverT < constraint:analyzesQuantity
+	
 	//
-	// Min Eb/N0
+	// Minimum Eb/N0
 	//
 	
 	concept MinEbOverN0 < vim4:IndividualUnitaryQuantity [
@@ -95,13 +221,50 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
 	
-	relation entity HasMinEbOverN0 [
-		from DownlinkArrangement
-		to MinEbOverN0
-		forward hasMinEbOverN0
-		functional
+	relation entity IsMinEbOverN0Of [
+		from MinEbOverN0
+		to DownlinkArrangement
+		forward isMinEbOverN0Of
+		reverse hasMinEbOverN0
+	] < vim4:Characterizes
+	
+	concept MinEbOverN0CausalConstraint < CausalConstraintUsingEncodingScheme [
+		restricts analysis:explains to exactly 1 MinEbOverN0
+		restricts analysis:analyzes to exactly 1
+		restricts analyzesBitErrorRate to exactly 1 BitErrorRate
 	]
 
+	relation explainsMinEbOverN0 < constraint:explainsQuantity
+	@rdfs:label "R_e"
+	relation analyzesBitErrorRate < constraint:analyzesQuantity
+	
+	//
+	// Information Rate
+	//
+	
+	concept InformationRate < vim4:IndividualUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.15:frequency
+		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	relation entity IsInformationRateOf [
+		from InformationRate
+		to DownlinkArrangement
+		forward isInformationRateOf
+		reverse hasInformationRate
+	] < vim4:Characterizes
+
+	@rdfs:label "R_i"
+	concept InformationRateCausalConstraint < CausalConstraintUsingEncodingScheme [
+		restricts analysis:explains to exactly 1 InformationRate
+		restricts analysis:analyzes to exactly 1
+		restricts analyzesBitRate to exactly 1 BitRate
+	]
+	
+	relation explainsInformationRate < constraint:explainsQuantity
+	@rdfs:label "R_b"
+	relation analyzesBitRate < constraint:analyzesQuantity
+	
 	//
 	// Link Margin
 	//
@@ -111,14 +274,14 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
 	
-	relation entity HasLinkMargin [
-		from DownlinkArrangement
-		to LinkMargin
-		forward hasLinkMargin
-		functional
-	]
+	relation entity IsLinkMarginOf [
+		from LinkMargin
+		to DownlinkArrangement
+		forward isLinkMarginOf
+		reverse hasLinkMargin
+	] < vim4:Characterizes
 	
-	@rdfs:label "LM"
+	@rdfs:label "M_l"
 	concept LinkMarginCausalConstraint < constraint:CausalConstraint [
 		restricts analysis:explains to exactly 1 LinkMargin
 		restricts analysis:analyzes to exactly 2
@@ -127,8 +290,95 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	]
 	
 	relation explainsLinkMargin < constraint:explainsQuantity
-	@rdfs:label "E_b_N_0"
+	@rdfs:label "Eb_N0"
 	relation analyzesEbOverN0 < constraint:analyzesQuantity
-	@rdfs:label "min_E_b_N_0"
+	@rdfs:label "min_Eb_N0"
 	relation analyzesMinEbOverN0 < constraint:analyzesQuantity
+	
+	//
+	//
+	//
+	// Transmitter
+	//
+	//
+	//
+	
+	concept Transmitter < mission:Component, vim4:Object [
+		restricts hasEffectiveIsotropicRadiatedPower to exactly 1
+	]
+	
+	//
+	//
+	// Asserted Quantities
+	//
+	//
+	
+	//
+	// Effective Isotropic Radiated Power
+	//
+	
+	concept EffectiveIsotropicRadiatedPower < vim4:IndividualUnitaryQuantity [
+		// dimension ?
+		restricts vim4:characterizes to exactly 1 Transmitter
+	]
+	
+	relation entity IsEffectiveIsotropicRadiatedPowerOf [
+		from EffectiveIsotropicRadiatedPower
+		to Transmitter
+		forward isEffectiveIsotropicRadiatedPowerOf
+		reverse hasEffectiveIsotropicRadiatedPower
+	] < vim4:Characterizes 
+	
+	//
+	//
+	//
+	// Receiver
+	//
+	//
+	//
+	
+	concept Receiver < mission:Component, vim4:Object [
+		restricts hasGainOverSystemNoiseTemperature to exactly 1
+	]
+	
+	//
+	//
+	// Asserted Quantities
+	//
+	//
+	
+	//
+	// Gain Over System Noise Temperature
+	//
+	
+	concept GainOverSystemNoiseTemperature < vim4:IndividualUnitaryQuantity [
+		restricts vim4:characterizes to exactly 1 Receiver
+	]
+	
+	relation entity IsGainOverSystemNoiseTemperatureOf [
+		from GainOverSystemNoiseTemperature
+		to Receiver
+		forward isGainOverSystemNoiseTemperatureOf
+		reverse hasGainOverSystemNoiseTemperature
+	] < vim4:Characterizes
+	
+	//
+	//
+	// Special-Purpose Concept Specializations
+	//
+	//
+	
+	concept CausalConstraintUsingEncodingScheme < constraint:CausalConstraint
+	
+	scalar property usesEncodingScheme [
+		domain CausalConstraintUsingEncodingScheme
+		range EncodingScheme
+		functional
+	]
+	
+	rule setCausalConstraintEncodingScheme [
+		CausalConstraintUsingEncodingScheme(cc) & analysis:explains(cc, q) & vim4:characterizes(q, dla)
+			& DownlinkArrangement(dla) & hasEncodingScheme(dla, es) -> usesEncodingScheme(c, es)
+	]
+	
 }
