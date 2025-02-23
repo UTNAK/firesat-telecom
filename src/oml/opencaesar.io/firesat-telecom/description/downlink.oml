@@ -8,27 +8,127 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	uses <http://imce.jpl.nasa.gov/foundation/base#> as base
 	uses <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downlink
 	
+	//
+	//
+	// Downlink Arrangement
+	//
+	//
+	
 	instance downlinkArrangement : downlink:DownlinkArrangement [
-		base:hasAlternateName "downlink arrangement"
+		base:hasAlternateName "downlink arrangement 1"
+		downlink:hasOperatingFrequency frequency
+		downlink:hasSpacePathLength spacePathLength
+		downlink:hasBitRate bitRate
+		downlink:hasEncodingScheme "BPSK"
+		downlink:hasBitErrorRate bitErrorRate
+		downlink:hasSpaceLoss spaceLoss
+		downlink:hasIrradiance irradiance
+		downlink:hasEbOverN0 ebOverN0
+		downlink:hasMinEbOverN0 minEbOverN0
+		downlink:hasInformationRate informationRate
+		downlink:hasLinkMargin linkMargin
 	]
 	
-	instance ebOverN0 : downlink:EbOverN0 [
-		vim4:characterizes downlinkArrangement
+	//
+	// Downlink Arrangement Quantities
+	// 
+	
+	instance frequency : downlink:Frequency
+	instance spacePathLength : downlink:SpacePathLength
+	instance bitRate : downlink:BitRate
+	instance bitErrorRate : downlink:BitErrorRate
+	instance spaceLoss : downlink:SpaceLoss
+	instance irradiance : downlink:Irradiance
+	instance ebOverN0 : downlink:EbOverN0
+	instance minEbOverN0 : downlink:MinEbOverN0
+	instance informationRate : downlink:InformationRate
+	instance linkMargin : downlink:LinkMargin
+	
+	//
+	//
+	// Transmitter
+	//
+	//
+	
+	instance transmitter : downlink:Transmitter [
+		downlink:hasEffectiveIsotropicRadiatedPower effectiveIsotropicRadiatedPower
 	]
 	
-	instance minEbOverN0 : downlink:MinEbOverN0 [
-		vim4:characterizes downlinkArrangement
+	//
+	// Transmitter Quantities
+	//
+	
+	instance effectiveIsotropicRadiatedPower : downlink:EffectiveIsotropicRadiatedPower
+	
+	//
+	//
+	// Receiver 1
+	//
+	//
+	
+	instance receiver1 : downlink:Receiver [
+		downlink:hasGainOverSystemNoiseTemperature gainOverSystemNoiseTemperature1
 	]
 	
-	instance linkMargin : downlink:LinkMargin [
-		vim4:characterizes downlinkArrangement
+	//
+	// Receiver1 Quantities
+	//
+	
+	instance gainOverSystemNoiseTemperature1 : downlink:GainOverSystemNoiseTemperature
+	
+	//
+	//
+	// Receiver 2
+	//
+	//
+	
+	instance receiver2 : downlink:Receiver [
+		downlink:hasGainOverSystemNoiseTemperature gainOverSystemNoiseTemperature2
 	]
 	
-	// should be able to create this
+	//
+	// Receiver1 Quantities
+	//
+	
+	instance gainOverSystemNoiseTemperature2 : downlink:GainOverSystemNoiseTemperature
+	
+	//
+	//
+	// Causal Constraints
+	//
+	//
 	
 	instance linkMarginCausalConstraint : downlink:LinkMarginCausalConstraint [
 		downlink:explainsLinkMargin linkMargin
 		downlink:analyzesEbOverN0 ebOverN0
 		downlink:analyzesMinEbOverN0 minEbOverN0
+	]
+	
+	instance ebOverN0CausalConstraint : downlink:EbOverN0CausalConstraint [
+		downlink:explainsEbOverN0 ebOverN0
+		downlink:analyzesIrradiance irradiance
+		downlink:analyzesGOverT gainOverSystemNoiseTemperature1
+		downlink:analyzesGOverT gainOverSystemNoiseTemperature2
+	]
+	
+	instance irradianceCausalConstraint : downlink:IrradianceCausalConstraint [
+		downlink:explainsIrradiance irradiance
+		downlink:analyzesEffectivePower effectiveIsotropicRadiatedPower
+		downlink:analyzesSpaceLoss spaceLoss
+	]
+	
+	instance spaceLossCausalConstraint : downlink:SpaceLossCausalConstraint [
+		downlink:explainsSpaceLoss spaceLoss
+		downlink:analyzesSpacePathLength spacePathLength
+		downlink:analyzesFrequency frequency
+	]
+	
+	instance minEbOverN0CausalConstraint : downlink:MinEbOverN0CausalConstraint [
+		downlink:explainsMinEbOverN0 minEbOverN0
+		downlink:analyzesBitErrorRate bitErrorRate
+	]
+	
+	instance informationRateCausalConstraint : downlink:InformationRateCausalConstraint [
+		downlink:explainsInformationRate informationRate
 	]
 }

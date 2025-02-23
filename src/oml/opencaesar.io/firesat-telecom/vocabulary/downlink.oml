@@ -143,13 +143,13 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	concept SpaceLossCausalConstraint < constraint:CausalConstraint [
 		restricts analysis:explains to exactly 1 SpaceLoss
 		restricts analysis:analyzes to exactly 2
-		restricts analyzesLength to exactly 1 SpacePathLength
+		restricts analyzesSpacePathLength to exactly 1 SpacePathLength
 		restricts analyzesFrequency to exactly 1 Frequency
 	]
 	
 	relation explainsSpaceLoss < constraint:explainsQuantity
 	@rdfs:label "S"
-	relation analyzesLength < constraint:analyzesQuantity
+	relation analyzesSpacePathLength < constraint:analyzesQuantity
 	@rdfs:label "f"
 	relation analyzesFrequency < constraint:analyzesQuantity
 	
@@ -170,7 +170,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	] < vim4:Characterizes
 
 	@rdfs:label "E_e"
-	concept IrradianceConstraint < constraint:CausalConstraint [
+	concept IrradianceCausalConstraint < constraint:CausalConstraint [
 		restricts analysis:explains to exactly 1 Irradiance
 		restricts analysis:analyzes to exactly 2
 		restricts analyzesEffectivePower to exactly 1 EffectiveIsotropicRadiatedPower
