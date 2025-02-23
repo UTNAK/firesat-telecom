@@ -3,9 +3,8 @@
 @dc:rights "Copyright 2019, by Example Company"
 description <http://opencaesar.io/firesat-telecom/description/downlink#> as downlink-description {
 	
-	extends <http://www.w3.org/2000/01/rdf-schema#> as rdfs
+	uses <http://www.w3.org/2000/01/rdf-schema#> as rdfs
 	uses <http://purl.org/dc/elements/1.1/> as dc
-	uses <http://bipm.org/jcgm/vim4#> as vim4
 	uses <http://imce.jpl.nasa.gov/foundation/base#> as base
 	uses <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downlink
 	
