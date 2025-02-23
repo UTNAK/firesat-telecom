@@ -6,6 +6,7 @@ project:
 
 dependencies:
    - io.opencaesar.ontologies:core-vocabularies:5.+
+   - io.opencaesar.ontologies:imce-vocabularies:5.+
 
 datasets:
    template:

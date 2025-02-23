@@ -1,0 +1,170 @@
+@dc:title "Example Vocabulary"
+@dc:creator "Example Company"
+@dc:rights "Copyright 2019, by Example Company"
+vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/transmitter#> as transmitter {
+	
+	extends <http://www.w3.org/2000/01/rdf-schema#> as rdfs
+	extends <http://purl.org/dc/elements/1.1/> as dc
+	extends <http://imce.jpl.nasa.gov/foundation/base#> as base
+	extends <http://imce.jpl.nasa.gov/foundation/analysis#> as analysis
+	extends <http://imce.jpl.nasa.gov/foundation/mission#> as mission
+	extends <http://bipm.org/jcgm/vim4#> as vim4
+	extends <http://opencaesar.io/firesat-telecom/vocabulary/constraint#> as constraint
+	extends <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downlink
+
+	uses <http://iso.org/iso-80000-3.1#> as iso-80000-3.1
+	uses <http://iso.org/iso-80000-3.6#> as iso-80000-3.6
+	
+	//
+	// EncoderModulator
+	//
+	
+	concept EncoderModulator < mission:Component [
+	]
+	
+	scalar property hasEncodingScheme [
+		domain EncoderModulator
+		range downlink:EncodingScheme
+		functional
+	]
+	
+	rule setEncodingScheme [
+		EncoderModulator(e) & base:contains(d, e) & downlink:DownlinkArrangement(d) & downlink:hasEncodingScheme(e, s) -> hasEncodingScheme(e, s)
+	]
+	
+	//
+	// Amplifier
+	//
+	
+	concept Amplifier < mission:Component, vim4:Object
+	
+	concept Power < base:IdentifiedElement, vim4:IndividualUnitaryQuantity [
+		restricts vim4:characterizes to exactly 1 Amplifier
+	]
+	
+	//
+	// Antenna
+	//
+	
+	concept Antenna < mission:Component, vim4:Object [
+		restricts some mission:presents to Radiator
+	]
+	
+	concept Radiator < mission:Interface [
+		restricts mission:isPresentedBy to exactly 1 Antenna
+		restricts all mission:transfersOut to RadiatedEnergy
+	]
+	
+	concept RadiatedEnergy < mission:Flow [
+	]
+	
+	concept Frequency < downlink:OperatingFrequency
+	
+	rule setFrequency [
+		Antenna(a) & base:contains(d, a) & downlink:DownlinkArrangement(d) & vim4:characterizes(dfq, d) & downlink:OperatingFrequency(dfq)
+			& vim4:isAttributedTo(dfv, dfq) & vim4:characterizes(afq, a) & Frequency(afq) -> vim4:isAttributedTo(dfv, afq)
+	]
+	
+	concept Beamwidth < vim4:IndividualUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.6:solid-angle
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+	
+	concept Diameter < vim4:IndividualUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.1:diameter
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+
+	concept PointingOffset < vim4:IndividualUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.6:solid-angle
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+
+	concept PointingLoss < vim4:IndividualUnitaryQuantity [
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+
+	concept PeakGain < vim4:IndividualUnitaryQuantity [
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+
+	concept Gain < vim4:IndividualUnitaryQuantity [
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+
+	concept LineLoss < vim4:IndividualUnitaryQuantity [
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+	
+	concept EffectiveIsotropicRadiatedPower < vim4:IndividualUnitaryQuantity [
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+	
+	@rdfs:label "EIRP"
+	concept EIRPCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 EffectiveIsotropicRadiatedPower
+		restricts analysis:analyzes to exactly 3
+		restricts analyzesPower to exactly 1 Power
+		restricts analyzesLineLoss to exactly 1 LineLoss
+		restricts analyzesGain to exactly 1 Gain
+	]
+	
+	relation explainsEIRP < constraint:explainsQuantity
+	@rdfs:label "P"
+	relation analyzesPower < constraint:analyzesQuantity
+	@rdfs:label "L_l"
+	relation analyzesLineLoss < constraint:analyzesQuantity
+	@rdfs:label "G"
+	relation analyzesGain < constraint:analyzesQuantity
+
+	@rdfs:label "G"
+	concept GainCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 Gain
+		restricts analysis:analyzes to exactly 2
+		restricts analyzesPointingLoss to exactly 1 PointingLoss
+		restricts analyzesPeakGain to exactly 1 PeakGain
+	]
+	
+	relation explainsGain < constraint:explainsQuantity
+	@rdfs:label "L_p"
+	relation analyzesPointingLoss < constraint:analyzesQuantity
+	@rdfs:label "G_p"
+	relation analyzesPeakGain < constraint:analyzesQuantity
+
+	@rdfs:label "G_p"
+	concept PeakGainCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 PeakGain
+		restricts analysis:analyzes to exactly 2
+		restricts analyzesDiameter to exactly 1 Diameter
+		restricts analyzesFrequency to exactly 1 Frequency
+	]
+	
+	relation explainsPeakGain < constraint:explainsQuantity
+	@rdfs:label "D"
+	relation analyzesDiameter < constraint:analyzesQuantity
+	@rdfs:label "f"
+	relation analyzesFrequency < constraint:analyzesQuantity
+
+	@rdfs:label "L_p"
+	concept PointingLossCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 PointingLoss
+		restricts analysis:analyzes to exactly 2
+		restricts analyzesBeamWidth to exactly 1 Beamwidth
+		restricts analyzesPointingOffset to exactly 1 PointingOffset
+	]
+	
+	relation explainsPointingLoss < constraint:explainsQuantity
+	@rdfs:label "theta"
+	relation analyzesBeamWidth < constraint:analyzesQuantity
+	@rdfs:label "e"
+	relation analyzesPointingOffset < constraint:analyzesQuantity
+
+	@rdfs:label "D"
+	concept DiameterCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 Diameter
+		restricts analysis:analyzes to exactly 2
+		restricts analyzesBeamWidth to exactly 1 Beamwidth
+		restricts analyzesFrequency to exactly 1 Frequency
+	]
+
+}

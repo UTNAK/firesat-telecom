@@ -1,0 +1,134 @@
+@dc:title "Example Vocabulary"
+@dc:creator "Example Company"
+@dc:rights "Copyright 2019, by Example Company"
+vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downlink {
+	
+	extends <http://www.w3.org/2000/01/rdf-schema#> as rdfs
+	extends <http://purl.org/dc/elements/1.1/> as dc
+	extends <http://imce.jpl.nasa.gov/foundation/analysis#> as analysis
+	extends <http://imce.jpl.nasa.gov/foundation/mission#> as mission
+	extends <http://bipm.org/jcgm/vim4#> as vim4
+	extends <http://opencaesar.io/firesat-telecom/vocabulary/constraint#> as constraint
+	
+	uses <http://iso.org/iso-80000-3.15#> as iso-80000-3.15
+
+	//
+	// Downlink Arrangement
+	//
+	
+	concept DownlinkArrangement < mission:Component, vim4:Object [
+		//restricts some inverseOf(vim4:characterizes) to OperatingFrequency
+		restricts hasOperatingFrequency to exactly 1
+		restricts hasEncodingScheme to exactly 1
+		restricts hasBitErrorRate to exactly 1
+		restricts hasEbOverN0 to exactly 1
+		restricts hasMinEbOverN0 to exactly 1
+		restricts hasLinkMargin to exactly 1
+	]
+	
+	//
+	// Encoding Scheme
+	//
+	
+	scalar EncodingScheme [ oneOf "BPSK", "BPSKRSV"]
+	
+	scalar property hasEncodingScheme [
+		domain DownlinkArrangement
+		range EncodingScheme
+		functional
+	]
+	
+	//
+	// Operating Frequency
+	//
+	
+	concept OperatingFrequency < vim4:IndividualUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.15:frequency
+		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	relation entity HasOperatingFrequency [
+		from DownlinkArrangement
+		to OperatingFrequency
+		forward hasOperatingFrequency
+		functional
+	]
+
+	//
+	// Bit Error Rate
+	//
+	
+	concept BitErrorRate < vim4:IndividualUnitaryQuantity [
+		// dimension one
+		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	relation entity HasBitErrorRate [
+		from DownlinkArrangement
+		to BitErrorRate
+		forward hasBitErrorRate
+		functional
+	]
+
+	//
+	// Eb/N0
+	//
+	
+	concept EbOverN0 < vim4:IndividualUnitaryQuantity [
+		// dimension one
+		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	relation entity HasEbOverN0 [
+		from DownlinkArrangement
+		to EbOverN0
+		forward hasEbOverN0
+		functional
+	]
+
+	//
+	// Min Eb/N0
+	//
+	
+	concept MinEbOverN0 < vim4:IndividualUnitaryQuantity [
+		// dimension one
+		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	relation entity HasMinEbOverN0 [
+		from DownlinkArrangement
+		to MinEbOverN0
+		forward hasMinEbOverN0
+		functional
+	]
+
+	//
+	// Link Margin
+	//
+	
+	concept LinkMargin < vim4:IndividualUnitaryQuantity [
+		// dimension one
+		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	relation entity HasLinkMargin [
+		from DownlinkArrangement
+		to LinkMargin
+		forward hasLinkMargin
+		functional
+	]
+	
+	@rdfs:label "LM"
+	concept LinkMarginCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 LinkMargin
+		restricts analysis:analyzes to exactly 2
+		restricts analyzesEbOverN0 to exactly 1 EbOverN0
+		restricts analyzesMinEbOverN0 to exactly 1 MinEbOverN0
+	]
+	
+	relation explainsLinkMargin < constraint:explainsQuantity
+	@rdfs:label "E_b_N_0"
+	relation analyzesEbOverN0 < constraint:analyzesQuantity
+	@rdfs:label "min_E_b_N_0"
+	relation analyzesMinEbOverN0 < constraint:analyzesQuantity
+}

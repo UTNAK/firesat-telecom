@@ -1,0 +1,83 @@
+@dc:title "Example Vocabulary"
+@dc:creator "Example Company"
+@dc:rights "Copyright 2019, by Example Company"
+vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/receiver#> as receiver {
+	
+	extends <http://www.w3.org/2000/01/rdf-schema#> as rdfs
+	extends <http://purl.org/dc/elements/1.1/> as dc
+	extends <http://imce.jpl.nasa.gov/foundation/base#> as base
+	extends <http://imce.jpl.nasa.gov/foundation/analysis#> as analysis
+	extends <http://imce.jpl.nasa.gov/foundation/mission#> as mission
+	extends <http://bipm.org/jcgm/vim4#> as vim4
+	extends <http://opencaesar.io/firesat-telecom/vocabulary/constraint#> as constraint
+	extends <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downlink
+
+	uses <http://iso.org/iso-80000-3.1#> as iso-80000-3.1
+	uses <http://iso.org/iso-80000-3.6#> as iso-80000-3.6
+	
+	
+	concept Antenna < mission:Component, vim4:Object
+	
+	concept Frequency < downlink:OperatingFrequency
+	
+	rule setFrequency [
+		Antenna(a) & base:contains(d, a) & downlink:DownlinkArrangement(d) & vim4:characterizes(dfq, d) & downlink:OperatingFrequency(dfq)
+			& vim4:isAttributedTo(dfv, dfq) & vim4:characterizes(afq, a) & Frequency(afq) -> vim4:isAttributedTo(dfv, afq)
+	]
+	
+	concept DemodulatorDecoder < mission:Component
+	
+	scalar property hasEncodingScheme [
+		domain DemodulatorDecoder
+		range downlink:EncodingScheme
+		functional
+	]
+	
+	rule setEncodingScheme [
+		DemodulatorDecoder(e) & base:contains(d, e) & downlink:DownlinkArrangement(d) & downlink:hasEncodingScheme(e, s) -> hasEncodingScheme(e, s)
+	]
+	
+	concept Beamwidth < vim4:IndividualUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.6:solid-angle
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+	
+	concept Diameter < vim4:IndividualUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.1:diameter
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+
+	concept PointingOffset < vim4:IndividualUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.6:solid-angle
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+
+	concept PointingLoss < vim4:IndividualUnitaryQuantity [
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+
+	concept PeakGain < vim4:IndividualUnitaryQuantity [
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+
+	concept Gain < vim4:IndividualUnitaryQuantity [
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+
+	concept LineLoss < vim4:IndividualUnitaryQuantity [
+		restricts vim4:characterizes to exactly 1 Antenna
+	]
+	
+	concept PeakGainCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 PeakGain
+		restricts analysis:analyzes to exactly 2
+		restricts analyzesFrequency to exactly 1
+		restricts analyzesDiameter to exactly 1
+	]
+	
+	relation explainsPeakGain < constraint:explainsQuantity
+	@rdfs:label "f"
+	relation analyzesFrequency < constraint:analyzesQuantity
+	@rdfs:label "D"
+	relation analyzesDiameter < constraint:analyzesQuantity
+}

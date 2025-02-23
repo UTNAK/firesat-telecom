@@ -1,0 +1,38 @@
+@dc:title "Example Vocabulary"
+@dc:creator "Example Company"
+@dc:rights "Copyright 2019, by Example Company"
+vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/constraint#> as constraint {
+	
+	extends <http://purl.org/dc/elements/1.1/> as dc
+	extends <http://bipm.org/jcgm/vim4#> as vim4
+	extends <http://imce.jpl.nasa.gov/foundation/analysis#> as analysis
+
+	//
+	// Causal Constraint
+	//
+	
+	concept CausalConstraint < analysis:Explanation [
+		restricts explainsQuantity to exactly 1
+	]
+
+	relation entity ExplainsQuantity [
+		from CausalConstraint
+		to vim4:IndividualUnitaryQuantity
+		forward explainsQuantity
+		functional
+	]
+	
+	relation entity AnalyzesQuantity [
+		from CausalConstraint
+		to vim4:IndividualUnitaryQuantity
+		forward analyzesQuantity
+	]
+	
+	//
+	// Binding Constraint
+	//
+	
+	concept BindingConstraint < CausalConstraint [
+		restricts analyzesQuantity to exactly 1
+	]
+}
