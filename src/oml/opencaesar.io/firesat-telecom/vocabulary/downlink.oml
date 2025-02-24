@@ -76,13 +76,8 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Bit Rate
 	//
 	
-	concept BitRate < vim4:InherentUnitaryQuantity [
-		restricts vim4:instantiates to iso-80000-3.15:frequency
+	concept BitRate < metrology:BitRate [
 		restricts all vim4:characterizes to DownlinkArrangement
-	]
-	
-	concept BitRate_bps < vim4:UnitaryQuantityValue [
-		restricts vim4:unit to iso-80000-3.15:hertz
 	]
 	
 	relation entity IsBitRateOf [
@@ -108,14 +103,10 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Bit Error Rate
 	//
 	
-	concept BitErrorRate < vim4:InherentUnitaryQuantity [
-		// dimension one
+	concept BitErrorRate < metrology:BitErrorRate [
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
 	
-	concept BitErrorRate_one < vim4:UnitaryQuantityValue [
-		//restricts vim4:unit to 
-	]
 	relation entity IsBitErrorRateOf [
 		from BitErrorRate
 		to DownlinkArrangement

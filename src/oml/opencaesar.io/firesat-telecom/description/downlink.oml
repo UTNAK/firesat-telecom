@@ -53,13 +53,18 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	
 	@rdfs:label "bit rate"
 	instance bitRate : downlink:BitRate
-	instance bitRate_1 : downlink:BitRate_bps [
+	instance bitRate_1 : metrology:BitRate_bps [
 		vim4:hasDoubleNumber "85E+6"^^xsd:double
 		vim4:isAttributedTo bitRate
 	]
 	
 	@rdfs:label "bit error rate"
 	instance bitErrorRate : downlink:BitErrorRate
+	instance bitErrorRate_1 : metrology:BitErrorRate_one [
+		vim4:hasDoubleNumber "1E-5"^^xsd:double
+		vim4:isAttributedTo bitErrorRate
+	]
+	
 	@rdfs:label "space loss"
 	instance spaceLoss : downlink:SpaceLoss
 	@rdfs:label "irradiance"

@@ -10,6 +10,8 @@ description <http://opencaesar.io/firesat-telecom/description/metrology#> as met
 	uses <http://bipm.org/jcgm/vim4#> as vim4
 	//uses <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downlink
 	
+	instance quantity_one : vim4:GeneralQuantity
+	
 	instance unit_one : vim4:MeasurementUnit [
 		vim4:id "one"
 	]
