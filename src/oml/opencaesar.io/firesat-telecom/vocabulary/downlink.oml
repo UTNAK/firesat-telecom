@@ -368,6 +368,8 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	//
 	//
 	
+	ref concept vim4:IndividualUnitaryQuantity < analysis:AnalyzedElement
+	
 	concept CausalConstraintUsingEncodingScheme < constraint:CausalConstraint
 	
 	scalar property usesEncodingScheme [

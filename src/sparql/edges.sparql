@@ -1,0 +1,13 @@
+PREFIX analysis:	<http://imce.jpl.nasa.gov/foundation/analysis#>
+PREFIX downlink:	<http://opencaesar.io/firesat-telecom/vocabulary/downlink#>
+PREFIX constraint:	<http://opencaesar.io/firesat-telecom/vocabulary/constraint#>
+
+SELECT ?child ?parent
+
+WHERE {
+	[
+		a constraint:CausalConstraint;
+		analysis:explains ?parent;
+		analysis:analyzes ?child;
+	]
+}

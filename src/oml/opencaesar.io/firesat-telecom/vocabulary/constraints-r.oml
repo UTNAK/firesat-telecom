@@ -1,0 +1,28 @@
+@dc:title "Example Vocabulary"
+@dc:creator "Example Company"
+@dc:rights "Copyright 2019, by Example Company"
+vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/constraints-r#> as constraints-r {
+	
+	extends <http://purl.org/dc/elements/1.1/> as dc
+	extends <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downlink
+	
+	annotation property RFunction
+	
+	@RFunction "spaceLoss"
+	ref concept downlink:SpaceLossCausalConstraint
+	
+	@RFunction "irradiance"
+	ref concept downlink:IrradianceCausalConstraint
+	
+	@RFunction "ebOverN0"
+	ref concept downlink:EbOverN0CausalConstraint
+	
+	@RFunction "MinEbOverN0"
+	ref concept downlink:MinEbOverN0CausalConstraint
+	
+	@RFunction "informationRate"
+	ref concept downlink:InformationRateCausalConstraint
+	
+	@RFunction "linkMargin"
+	ref concept downlink:LinkMarginCausalConstraint
+}
