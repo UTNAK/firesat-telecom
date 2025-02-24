@@ -1,28 +1,51 @@
 @dc:title "Example Vocabulary"
 @dc:creator "Example Company"
 @dc:rights "Copyright 2019, by Example Company"
-vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/constraints-r#> as constraints-r {
+vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/r-notation#> as constraints-r {
 	
 	extends <http://purl.org/dc/elements/1.1/> as dc
 	extends <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downlink
 	
 	annotation property RFunction
+	annotation property RArgument
 	
 	@RFunction "spaceLoss"
 	ref concept downlink:SpaceLossCausalConstraint
+	@RArgument "spacePathLength"
+	ref relation downlink:analyzesSpacePathLength
+	@RArgument "frequency"
+	ref relation downlink:analyzesFrequency
 	
 	@RFunction "irradiance"
 	ref concept downlink:IrradianceCausalConstraint
+	@RArgument "effectivePower"
+	ref relation downlink:analyzesEffectivePower
+	@RArgument "spaceLoss"
+	ref relation downlink:analyzesSpaceLoss
 	
 	@RFunction "ebOverN0"
 	ref concept downlink:EbOverN0CausalConstraint
+	@RArgument "irradiance"
+	ref relation downlink:analyzesIrradiance
+	@RArgument "gOverT"
+	ref relation downlink:analyzesGOverT
 	
 	@RFunction "MinEbOverN0"
 	ref concept downlink:MinEbOverN0CausalConstraint
+	@RArgument "bitErrorRate"
+	ref relation downlink:analyzesBitErrorRate
+	@RArgument "encodingScheme"
+	ref scalar property downlink:usesEncodingScheme
 	
 	@RFunction "informationRate"
 	ref concept downlink:InformationRateCausalConstraint
+	@RArgument "bitRate"
+	ref relation downlink:analyzesBitRate
 	
 	@RFunction "linkMargin"
 	ref concept downlink:LinkMarginCausalConstraint
+	@RArgument "eBOverN0"
+	ref relation downlink:analyzesEbOverN0
+	@RArgument "minEBOverN0"
+	ref relation downlink:analyzesMinEbOverN0
 }

@@ -7,5 +7,6 @@ vocabulary bundle <http://opencaesar.io/firesat-telecom/vocabulary/bundle#> as v
 
 	includes <http://opencaesar.io/firesat-telecom/vocabulary/constraint#>
 	includes <http://opencaesar.io/firesat-telecom/vocabulary/downlink#>
+	includes <http://opencaesar.io/firesat-telecom/vocabulary/r-notation#>
 
 }
