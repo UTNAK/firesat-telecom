@@ -9,6 +9,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	extends <http://imce.jpl.nasa.gov/foundation/mission#> as mission
 	extends <http://bipm.org/jcgm/vim4#> as vim4
 	extends <http://opencaesar.io/firesat-telecom/vocabulary/constraint#> as constraint
+	extends <http://opencaesar.io/firesat-telecom/vocabulary/metrology#> as metrology
 	
 	uses <http://iso.org/iso-80000-3.1#> as iso-80000-3.1
 	uses <http://iso.org/iso-80000-3.15#> as iso-80000-3.15
@@ -45,13 +46,8 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Frequency
 	//
 	
-	concept Frequency < vim4:InherentUnitaryQuantity [
-		restricts vim4:instantiates to iso-80000-3.15:frequency
+	concept Frequency < metrology:Frequency [
 		restricts all vim4:characterizes to DownlinkArrangement
-	]
-	
-	concept Frequency_Hz < vim4:UnitaryQuantityValue [
-		restricts vim4:unit to iso-80000-3.15:hertz
 	]
 	
 	relation entity IsOperatingFrequencyOf [
@@ -65,8 +61,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Space Path Length
 	//
 	
-	concept SpacePathLength < vim4:IndividualUnitaryQuantity [
-		restricts vim4:instantiates to iso-80000-3.1:length-of-path
+	concept SpacePathLength < metrology:PathLength [
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
 	
@@ -81,9 +76,13 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Bit Rate
 	//
 	
-	concept BitRate < vim4:IndividualUnitaryQuantity [
+	concept BitRate < vim4:InherentUnitaryQuantity [
 		restricts vim4:instantiates to iso-80000-3.15:frequency
 		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	concept BitRate_bps < vim4:UnitaryQuantityValue [
+		restricts vim4:unit to iso-80000-3.15:hertz
 	]
 	
 	relation entity IsBitRateOf [
@@ -109,11 +108,14 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Bit Error Rate
 	//
 	
-	concept BitErrorRate < vim4:IndividualUnitaryQuantity [
+	concept BitErrorRate < vim4:InherentUnitaryQuantity [
 		// dimension one
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
 	
+	concept BitErrorRate_one < vim4:UnitaryQuantityValue [
+		//restricts vim4:unit to 
+	]
 	relation entity IsBitErrorRateOf [
 		from BitErrorRate
 		to DownlinkArrangement
@@ -131,7 +133,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Space Loss
 	//
 	
-	concept SpaceLoss < vim4:IndividualUnitaryQuantity [
+	concept SpaceLoss < vim4:InherentUnitaryQuantity [
 		// dimension one
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
@@ -161,7 +163,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Irradiance
 	//
 	
-	concept Irradiance < vim4:IndividualUnitaryQuantity [
+	concept Irradiance < vim4:InherentUnitaryQuantity [
 		// dimension M * T^-3
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
@@ -191,7 +193,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Eb/N0
 	//
 	
-	concept EbOverN0 < vim4:IndividualUnitaryQuantity [
+	concept EbOverN0 < vim4:InherentUnitaryQuantity [
 		// dimension one
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
@@ -220,7 +222,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Minimum Eb/N0
 	//
 	
-	concept MinEbOverN0 < vim4:IndividualUnitaryQuantity [
+	concept MinEbOverN0 < vim4:InherentUnitaryQuantity [
 		// dimension one
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
@@ -246,7 +248,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Information Rate
 	//
 	
-	concept InformationRate < vim4:IndividualUnitaryQuantity [
+	concept InformationRate < vim4:InherentUnitaryQuantity [
 		restricts vim4:instantiates to iso-80000-3.15:frequency
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
@@ -273,7 +275,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Link Margin
 	//
 	
-	concept LinkMargin < vim4:IndividualUnitaryQuantity [
+	concept LinkMargin < vim4:InherentUnitaryQuantity [
 		// dimension one
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
@@ -321,7 +323,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Effective Isotropic Radiated Power
 	//
 	
-	concept EffectiveIsotropicRadiatedPower < vim4:IndividualUnitaryQuantity [
+	concept EffectiveIsotropicRadiatedPower < vim4:InherentUnitaryQuantity [
 		// dimension ?
 		restricts vim4:characterizes to exactly 1 Transmitter
 	]
@@ -355,7 +357,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Gain Over System Noise Temperature
 	//
 	
-	concept GainOverSystemNoiseTemperature < vim4:IndividualUnitaryQuantity [
+	concept GainOverSystemNoiseTemperature < vim4:InherentUnitaryQuantity [
 		restricts vim4:characterizes to exactly 1 Receiver
 	]
 	
@@ -372,7 +374,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	//
 	//
 	
-	ref concept vim4:IndividualUnitaryQuantity < analysis:AnalyzedElement
+	ref concept vim4:InherentUnitaryQuantity < analysis:AnalyzedElement
 	
 	concept CausalConstraintUsingEncodingScheme < constraint:CausalConstraint
 	

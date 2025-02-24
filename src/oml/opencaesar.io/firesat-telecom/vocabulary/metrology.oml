@@ -1,0 +1,30 @@
+@dc:title "Example Vocabulary"
+@dc:creator "Example Company"
+@dc:rights "Copyright 2019, by Example Company"
+vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/metrology#> as metrology {
+	
+	//extends <http://www.w3.org/2000/01/rdf-schema#> as rdfs
+	extends <http://purl.org/dc/elements/1.1/> as dc
+	extends <http://bipm.org/jcgm/vim4#> as vim4
+	
+	uses <http://iso.org/iso-80000-3.1#> as iso-80000-3.1
+	uses <http://iso.org/iso-80000-3.15#> as iso-80000-3.15
+	//uses <http://opencaesar.io/firesat-telecom/description/metrology#> as metrology-description
+
+	concept Frequency < vim4:InherentUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.15:frequency
+	]
+	
+	concept Frequency_Hz < vim4:UnitaryQuantityValue [
+		restricts vim4:unit to iso-80000-3.15:hertz
+	]
+	
+	concept PathLength < vim4:InherentUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.1:length-of-path
+	]
+	
+	concept PathLength_m < vim4:UnitaryQuantityValue [
+		restricts vim4:unit to iso-80000-3.1:metre
+	]
+	
+}

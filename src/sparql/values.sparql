@@ -1,11 +1,12 @@
 PREFIX vim4:		<http://bipm.org/jcgm/vim4#>
 
-SELECT ?quantity ?value
+SELECT ?quantity ?value ?unit
 
 WHERE {
 	[
 		a vim4:UnitaryQuantityValue ;
 		vim4:hasDoubleNumber ?value ;
+		vim4:unit [ vim4:id ?unit ] ;
 		vim4:isAttributedTo ?quantity
 	]
 }

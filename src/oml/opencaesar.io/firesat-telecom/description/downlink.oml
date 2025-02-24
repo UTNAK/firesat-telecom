@@ -9,6 +9,7 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	uses <http://imce.jpl.nasa.gov/foundation/base#> as base
 	uses <http://bipm.org/jcgm/vim4#> as vim4
 	uses <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downlink
+	uses <http://opencaesar.io/firesat-telecom/vocabulary/metrology#> as metrology
 	
 	//
 	//
@@ -38,15 +39,25 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	
 	@rdfs:label "frequency"
 	instance frequency : downlink:Frequency
-	instance frequency_2_2GHz : downlink:Frequency_Hz [
+	instance frequency_1 : metrology:Frequency_Hz [
 		vim4:hasDoubleNumber "2.2E+9"^^xsd:double
 		vim4:isAttributedTo frequency
 	]
 	
 	@rdfs:label "space path length"
 	instance spacePathLength : downlink:SpacePathLength
+	instance spacePathLength_1 : metrology:PathLength_m [
+		vim4:hasDoubleNumber "2831E+3"^^xsd:double
+		vim4:isAttributedTo spacePathLength
+	]
+	
 	@rdfs:label "bit rate"
 	instance bitRate : downlink:BitRate
+	instance bitRate_1 : downlink:BitRate_bps [
+		vim4:hasDoubleNumber "85E+6"^^xsd:double
+		vim4:isAttributedTo bitRate
+	]
+	
 	@rdfs:label "bit error rate"
 	instance bitErrorRate : downlink:BitErrorRate
 	@rdfs:label "space loss"
