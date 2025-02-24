@@ -45,9 +45,13 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Frequency
 	//
 	
-	concept Frequency < vim4:IndividualUnitaryQuantity [
+	concept Frequency < vim4:InherentUnitaryQuantity [
 		restricts vim4:instantiates to iso-80000-3.15:frequency
 		restricts all vim4:characterizes to DownlinkArrangement
+	]
+	
+	concept Frequency_Hz < vim4:UnitaryQuantityValue [
+		restricts vim4:unit to iso-80000-3.15:hertz
 	]
 	
 	relation entity IsOperatingFrequencyOf [
