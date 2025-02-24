@@ -1,0 +1,20 @@
+PREFIX rdfs:		<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX analysis:	<http://imce.jpl.nasa.gov/foundation/analysis#>
+PREFIX downlink:	<http://opencaesar.io/firesat-telecom/vocabulary/downlink#>
+PREFIX constraint:	<http://opencaesar.io/firesat-telecom/vocabulary/constraint#>
+PREFIX r-notation:	<http://opencaesar.io/firesat-telecom/vocabulary/r-notation#>
+
+SELECT ?quantity ?function ?arg_name ?arg_quantity
+
+WHERE {
+	?analyzes rdfs:subPropertyOf constraint:analyzesQuantity ;
+			r-notation:RArgument ?arg_name .
+			
+	[
+		a constraint:CausalConstraint ;
+		constraint:explainsQuantity ?quantity ;
+		a [ r-notation:RFunction ?function ] ;
+		?analyzes ?arg_quantity 
+	]
+	
+}
