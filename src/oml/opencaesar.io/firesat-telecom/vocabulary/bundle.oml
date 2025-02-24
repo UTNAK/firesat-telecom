@@ -5,6 +5,7 @@ vocabulary bundle <http://opencaesar.io/firesat-telecom/vocabulary/bundle#> as v
 		
 	includes <http://purl.org/dc/elements/1.1/> as dc	
 
-	includes <http://opencaesar.io/firesat-telecom/vocabulary/vocabulary1#>
+	includes <http://opencaesar.io/firesat-telecom/vocabulary/constraint#>
+	includes <http://opencaesar.io/firesat-telecom/vocabulary/downlink#>
 
 }

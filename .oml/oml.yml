@@ -1,6 +1,6 @@
 project:
-   title: Oml Template # set this
-   description: This is an OML project template # set this
+   title: Firesat Telecom
+   description: Demonstrating constrained quantities
    group: io.opencaesar
    version: 1.0.0
 
@@ -10,8 +10,8 @@ dependencies:
 
 datasets:
    template:
-      iri: http://opencaesar.io/template/description/bundle # root ontology
-      url: http://localhost:3030/template # matches name in .oml/fuseki.ttl
+      iri: http://opencaesar.io/firesat-telecom/description/bundle # root ontology
+      url: http://localhost:3030/firesat-telecom # matches name in .oml/fuseki.ttl
       sources: [ 'src/oml' ]
       queries: src/sparql
       validations: src/shacl

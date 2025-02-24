@@ -20,13 +20,13 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/constraint#> as cons
 		to vim4:IndividualUnitaryQuantity
 		forward explainsQuantity
 		functional
-	]
+	] < analysis:Explains
 	
 	relation entity AnalyzesQuantity [
 		from CausalConstraint
 		to vim4:IndividualUnitaryQuantity
 		forward analyzesQuantity
-	]
+	] < analysis:Analyzes
 	
 	//
 	// Binding Constraint

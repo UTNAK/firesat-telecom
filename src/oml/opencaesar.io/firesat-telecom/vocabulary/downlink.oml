@@ -378,7 +378,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	
 	rule setCausalConstraintEncodingScheme [
 		CausalConstraintUsingEncodingScheme(cc) & analysis:explains(cc, q) & vim4:characterizes(q, dla)
-			& DownlinkArrangement(dla) & hasEncodingScheme(dla, es) -> usesEncodingScheme(c, es)
+			& DownlinkArrangement(dla) & hasEncodingScheme(dla, es) -> usesEncodingScheme(cc, es)
 	]
 	
 }

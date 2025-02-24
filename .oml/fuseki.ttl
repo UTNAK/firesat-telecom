@@ -5,7 +5,7 @@ PREFIX tdb:     <http://jena.hpl.hp.com/2008/tdb#>
 #############################################################################
 
 :service a                              fuseki:Service ;
-    fuseki:name                         "template" ; # matches name in ./oml/fuseki.ttl
+    fuseki:name                         "firesat-telecom" ; # matches name in ./oml/fuseki.ttl
     fuseki:dataset                      :dataset ;
     fuseki:serviceReadWriteGraphStore 	"data" ;
     fuseki:serviceReadGraphStore        "get" ;
