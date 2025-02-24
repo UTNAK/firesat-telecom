@@ -36,11 +36,27 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/metrology#> as metro
 	]
 	
 	concept BitErrorRate < vim4:InherentUnitaryQuantity [
-		restricts vim4:instantiates to metrology-description:quantity_one
+		restricts vim4:instantiates to metrology-description:one
 	]
 	
 	concept BitErrorRate_one < vim4:UnitaryQuantityValue [
 		restricts vim4:unit to metrology-description:unit_one
+	]
+	
+	concept Gain < vim4:InherentUnitaryQuantity [
+		restricts vim4:instantiates to metrology-description:one
+	]
+	
+	concept Gain_dB < vim4:UnitaryQuantityValue [
+		restricts vim4:unit to metrology-description:unit_one
+	]
+	
+	concept Irradiance < vim4:InherentUnitaryQuantity [
+		// dimension M * T^-3
+	]
+	
+	concept EbOverN0 < vim4:InherentUnitaryQuantity [
+		restricts vim4:instantiates to metrology-description:one
 	]
 	
 }

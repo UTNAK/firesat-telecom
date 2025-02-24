@@ -2,7 +2,7 @@ PREFIX rdfs:		<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX constraint:	<http://opencaesar.io/firesat-telecom/vocabulary/constraint#>
 PREFIX r-notation:	<http://opencaesar.io/firesat-telecom/vocabulary/r-notation#>
 
-SELECT ?quantity ?function ?arg_name ?arg_quantity
+SELECT ?quantity ?call ?arg_name ?arg_quantity
 
 WHERE {
 	?analyzes rdfs:subPropertyOf constraint:analyzesQuantity ;
@@ -11,7 +11,7 @@ WHERE {
 	[
 		a constraint:CausalConstraint ;
 		constraint:explainsQuantity ?quantity ;
-		a [ r-notation:RFunction ?function ] ;
+		a [ r-notation:RFunction ?call ] ;
 		?analyzes ?arg_quantity 
 	]
 	

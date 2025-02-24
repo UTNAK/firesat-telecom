@@ -1,0 +1,57 @@
+---
+title: "Link Margin Analysis"
+format: html
+editor: visual
+---
+
+```{r echo = FALSE}
+suppressPackageStartupMessages({
+library(tidyverse)
+library(jsonlite)
+library(igraph)
+})
+
+path <- "../../build/results/firesat-telecom/"
+
+edges <- read_json(paste0(path, "edges.json"))$results$bindings
+values <- read_json(paste0(path, "values.json"))$results$bindings
+calls <- read_json(paste0(path, "calls.json"))$results$bindings
+```
+
+## Asserted Quantity Values
+
+```{r echo = FALSE}
+vdf <- data.frame(
+  quantity =  unlist(Map(f = function(x) x$quantity$value, values)),
+  value =  unlist(Map(f = function(x) list(value = x$value$value), values))
+)
+vstruct <- toJSON(vdf, auto_unbox  = TRUE, pretty = TRUE)
+vstruct
+```
+
+## Constraint Calls
+
+```{r echo = FALSE}
+dfrow <- function(x) data.frame(
+  quantity = x$quantity$value,
+  call = x$call$value,
+  arg_name = x$arg_name$value,
+  arg_quantity = x$arg_quantity$value
+)
+cdf <- Reduce(f = rbind, x = Map(f = dfrow, calls)) |>
+  arrange(quantity, call, arg_name) |>
+  mutate(split_key = paste(quantity, call, arg_name, sep = "&"))
+cdfs <- split(x = cdf, f = cdf$split_key)
+arg_q_map <- Map(f = function(df) df$arg_quantity, cdfs)
+flat_cdf <- cdf |> select(-arg_quantity) |> unique() |> mutate(arg_quantities = arg_q_map[split_key]) |> select(-split_key)
+cstruct <- toJSON(flat_cdf, pretty = TRUE)
+cstruct
+```
+
+### Orchestration Graph
+
+```{r echo = FALSE}
+elist <- Reduce(f = c, x = Map(f = function(x) c(x$child$value, x$parent$value), edges), init = c())
+ograph <- graph_from_edgelist(matrix(elist, ncol = 2, byrow = TRUE))
+ograph
+```

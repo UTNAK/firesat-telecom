@@ -124,8 +124,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Space Loss
 	//
 	
-	concept SpaceLoss < vim4:InherentUnitaryQuantity [
-		// dimension one
+	concept SpaceLoss < metrology:Gain [
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
 	
@@ -136,7 +135,6 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 		reverse hasSpaceLoss
 	] < vim4:Characterizes
 	
-	@rdfs:label "L_s"
 	concept SpaceLossCausalConstraint < constraint:CausalConstraint [
 		restricts analysis:explains to exactly 1 SpaceLoss
 		restricts analysis:analyzes to exactly 2
@@ -145,17 +143,14 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	]
 	
 	relation explainsSpaceLoss < constraint:explainsQuantity
-	@rdfs:label "S"
 	relation analyzesSpacePathLength < constraint:analyzesQuantity
-	@rdfs:label "f"
 	relation analyzesFrequency < constraint:analyzesQuantity
 	
 	//
 	// Irradiance
 	//
 	
-	concept Irradiance < vim4:InherentUnitaryQuantity [
-		// dimension M * T^-3
+	concept Irradiance < metrology:Irradiance [
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
 	
@@ -166,7 +161,6 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 		reverse hasIrradiance
 	] < vim4:Characterizes
 
-	@rdfs:label "E_e"
 	concept IrradianceCausalConstraint < constraint:CausalConstraint [
 		restricts analysis:explains to exactly 1 Irradiance
 		restricts analysis:analyzes to exactly 2
@@ -174,18 +168,15 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 		restricts analyzesSpaceLoss to exactly 1 SpaceLoss
 	]
 	
-	relation explainsIrradiance < constraint:explainsQuantity
-	@rdfs:label "P_o"
+	relation explainsIrradiance < constraint:explainsQuantity	@rdfs:label "P_o"
 	relation analyzesEffectivePower < constraint:analyzesQuantity
-	@rdfs:label "L_s"
 	relation analyzesSpaceLoss < constraint:analyzesQuantity
 	
 	//
 	// Eb/N0
 	//
 	
-	concept EbOverN0 < vim4:InherentUnitaryQuantity [
-		// dimension one
+	concept EbOverN0 < metrology:EbOverN0 [
 		restricts all vim4:characterizes to DownlinkArrangement
 	]
 	
@@ -196,7 +187,6 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 		reverse hasEbOverN0
 	] < vim4:Characterizes
 
-	@rdfs:label "Eb_N0"
 	concept EbOverN0CausalConstraint < constraint:CausalConstraint [
 		restricts analysis:explains to exactly 1 EbOverN0
 		restricts analyzesIrradiance to exactly 1 Irradiance
@@ -204,9 +194,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	]
 	
 	relation explainsEbOverN0 < constraint:explainsQuantity
-	@rdfs:label "E_e"
 	relation analyzesIrradiance < constraint:analyzesQuantity
-	@rdfs:label "G/T"
 	relation analyzesGOverT < constraint:analyzesQuantity
 	
 	//
