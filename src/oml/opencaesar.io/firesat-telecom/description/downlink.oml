@@ -17,7 +17,6 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	//
 	//
 	
-	@rdfs:label "downlink arrangement"
 	instance downlinkArrangement : downlink:DownlinkArrangement [
 		base:hasAlternateName "downlink arrangement 1"
 		downlink:hasOperatingFrequency frequency
@@ -37,21 +36,18 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	// Downlink Arrangement Quantities
 	// 
 	
-	@rdfs:label "frequency"
 	instance frequency : downlink:Frequency
 	instance frequency_1 : metrology:Frequency_Hz [
 		vim4:hasDoubleNumber "2.2E+9"^^xsd:double
 		vim4:isAttributedTo frequency
 	]
 	
-	@rdfs:label "space path length"
 	instance spacePathLength : downlink:SpacePathLength
 	instance spacePathLength_1 : metrology:PathLength_m [
 		vim4:hasDoubleNumber "2831E+3"^^xsd:double
 		vim4:isAttributedTo spacePathLength
 	]
 	
-	@rdfs:label "bit rate"
 	instance bitRate : downlink:BitRate
 	instance bitRate_1 : metrology:BitRate_bps [
 		vim4:hasDoubleNumber "85E+6"^^xsd:double
@@ -67,16 +63,22 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	
 	@rdfs:label "space loss"
 	instance spaceLoss : downlink:SpaceLoss
+	
 	@rdfs:label "irradiance"
 	instance irradiance : downlink:Irradiance
+	
 	@rdfs:label "Eb/N0"
 	instance ebOverN0 : downlink:EbOverN0
+	
 	@rdfs:label "minimum Eb/N0"
 	instance minEbOverN0 : downlink:MinEbOverN0
+	
 	@rdfs:label "information rate"
 	instance informationRate : downlink:InformationRate
+	
 	@rdfs:label "link margin"
 	instance linkMargin : downlink:LinkMargin
+	
 	
 	//
 	//
@@ -94,8 +96,12 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	//
 	
 	
-	@rdfs:label "EIRP"
 	instance effectiveIsotropicRadiatedPower : downlink:EffectiveIsotropicRadiatedPower
+	
+	instance effectiveIsotropicRadiatedPower_1 : metrology:RadiatedPower_dBW [
+		vim4:hasDoubleNumber "17.61292"^^xsd:double
+		vim4:isAttributedTo effectiveIsotropicRadiatedPower
+	]
 	
 	//
 	//
@@ -103,7 +109,6 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	//
 	//
 	
-	@rdfs:label "receiver 1"
 	instance receiver1 : downlink:Receiver [
 		downlink:hasGainOverSystemNoiseTemperature gainOverSystemNoiseTemperature1
 	]
@@ -112,8 +117,12 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	// Receiver 1 Quantities
 	//
 	
-	@rdfs:label "G/T 1"
 	instance gainOverSystemNoiseTemperature1 : downlink:GainOverSystemNoiseTemperature
+	
+	instance gainOverSystemNoiseTemperature1_1 : metrology:GOverT_dBK [
+		vim4:hasDoubleNumber "17.68685"^^xsd:double
+		vim4:isAttributedTo gainOverSystemNoiseTemperature1
+	]
 	
 	//
 	//
@@ -121,7 +130,6 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	//
 	//
 	
-	@rdfs:label "receiver 2"
 	instance receiver2 : downlink:Receiver [
 		downlink:hasGainOverSystemNoiseTemperature gainOverSystemNoiseTemperature2
 	]
@@ -132,6 +140,11 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	
 	@rdfs:label "G/T 2"
 	instance gainOverSystemNoiseTemperature2 : downlink:GainOverSystemNoiseTemperature
+	
+	instance gainOverSystemNoiseTemperature2_1 : metrology:GOverT_dBK [
+		vim4:hasDoubleNumber "17.68685"^^xsd:double
+		vim4:isAttributedTo gainOverSystemNoiseTemperature2
+	]
 	
 	//
 	//

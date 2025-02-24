@@ -25,4 +25,12 @@ description <http://opencaesar.io/firesat-telecom/description/metrology#> as met
 	instance unit_w_per_m2 : vim4:MeasurementUnit [
 		vim4:id "W/m^2"
 	]
+
+	instance dBW : vim4:MeasurementUnit [
+		vim4:id "dBW"
+	]
+	
+	instance dBK : vim4:MeasurementUnit [
+		vim4:id "dB/K"
+	]
 }

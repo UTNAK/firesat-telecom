@@ -11,7 +11,6 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	extends <http://opencaesar.io/firesat-telecom/vocabulary/constraint#> as constraint
 	extends <http://opencaesar.io/firesat-telecom/vocabulary/metrology#> as metrology
 	
-	uses <http://iso.org/iso-80000-3.1#> as iso-80000-3.1
 	uses <http://iso.org/iso-80000-3.15#> as iso-80000-3.15
 
 	//
@@ -302,8 +301,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Effective Isotropic Radiated Power
 	//
 	
-	concept EffectiveIsotropicRadiatedPower < vim4:InherentUnitaryQuantity [
-		// dimension ?
+	concept EffectiveIsotropicRadiatedPower < metrology:RadiatedPower [
 		restricts vim4:characterizes to exactly 1 Transmitter
 	]
 	
@@ -336,7 +334,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 	// Gain Over System Noise Temperature
 	//
 	
-	concept GainOverSystemNoiseTemperature < vim4:InherentUnitaryQuantity [
+	concept GainOverSystemNoiseTemperature < metrology:GOverT [
 		restricts vim4:characterizes to exactly 1 Receiver
 	]
 	
