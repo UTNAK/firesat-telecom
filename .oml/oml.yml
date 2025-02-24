@@ -9,7 +9,7 @@ dependencies:
    - io.opencaesar.ontologies:imce-vocabularies:5.+
 
 datasets:
-   template:
+   firesat-telecom:
       iri: http://opencaesar.io/firesat-telecom/description/bundle # root ontology
       url: http://localhost:3030/firesat-telecom # matches name in .oml/fuseki.ttl
       sources: [ 'src/oml' ]
