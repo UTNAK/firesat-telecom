@@ -22,7 +22,6 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 		downlink:hasOperatingFrequency frequency
 		downlink:hasSpacePathLength spacePathLength
 		downlink:hasBitRate bitRate
-		downlink:hasEncodingScheme "BPSK"
 		downlink:hasBitErrorRate bitErrorRate
 		downlink:hasSpaceLoss spaceLoss
 		downlink:hasIrradiance irradiance
