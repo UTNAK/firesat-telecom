@@ -7,6 +7,7 @@ editor: visual
 ```{r echo = FALSE}
 suppressPackageStartupMessages({
   library(tidyverse)
+  library(knitr)
   library(jsonlite)
   library(igraph)
   library(rollupTree)
@@ -14,7 +15,7 @@ suppressPackageStartupMessages({
 
 source("link-margin.R")
 
-path <- "../../build/results/firesat-telecom/"
+path <- "../../build/results/firesat-telecom/option-2/"
 
 edges <- read_json(paste0(path, "edges.json"))$results$bindings
 values <- read_json(paste0(path, "values.json"))$results$bindings
@@ -29,7 +30,7 @@ vdf <- data.frame(
   value =  unlist(Map(f = function(x) list(value = x$value$value), values)),
   stringsAsFactors = FALSE
 )
-vdf
+knitr::kable(vdf)
 ```
 
 ## Constraint Calls
@@ -45,7 +46,7 @@ dfrow <- function(x) data.frame(
 )
 cdf <- Reduce(f = rbind, x = Map(f = dfrow, calls)) |>
   arrange(quantity, call, arg_name)
-cdf
+knitr::kable(cdf)
 ```
 
 ### Orchestration Graph
@@ -54,6 +55,12 @@ cdf
 elist <- Reduce(f = c, x = Map(f = function(x) c(x$child$value, x$parent$value), edges), init = c())
 ograph <- graph_from_edgelist(matrix(elist, ncol = 2, byrow = TRUE))
 ograph
+```
+### Calculation Order
+
+```{r echo = FALSE}
+o <- data.frame(quantity = names(topo_sort(ograph)), order = 1:length(V(ograph)))
+knitr::kable(o)
 ```
 
 ### Calculation Wrapper
@@ -78,6 +85,7 @@ update_values <- function(v, t, sl) {
   if (length(sl) == 0) v else calculate_quantity(quantity = t, cdata = cdf, vdata = v)
 }
 validate_ds <- function(t, d) TRUE
-validate_tree <- function(t) TRUE
-rollup(ograph, vdf, update_values, validate_ds, validate_tree)
+validate_tree <- function(t) is_dag(t)
+result <- rollup(ograph, vdf, update_values, validate_ds, validate_tree)
+knitr::kable(result)
 ```
