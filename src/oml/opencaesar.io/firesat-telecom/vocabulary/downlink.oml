@@ -190,6 +190,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downli
 		restricts analysis:explains to exactly 1 EbOverN0
 		restricts analyzesIrradiance to exactly 1 Irradiance
 		restricts all analyzesGOverT to GainOverSystemNoiseTemperature
+		restricts analyzesBitRate to exactly 1 BitRate
 	]
 	
 	relation explainsEbOverN0 < constraint:explainsQuantity

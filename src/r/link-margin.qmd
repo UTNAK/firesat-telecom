@@ -6,10 +6,13 @@ editor: visual
 
 ```{r echo = FALSE}
 suppressPackageStartupMessages({
-library(tidyverse)
-library(jsonlite)
-library(igraph)
+  library(tidyverse)
+  library(jsonlite)
+  library(igraph)
+  library(rollupTree)
 })
+
+source("link-margin.R")
 
 path <- "../../build/results/firesat-telecom/"
 
@@ -23,10 +26,10 @@ calls <- read_json(paste0(path, "calls.json"))$results$bindings
 ```{r echo = FALSE}
 vdf <- data.frame(
   quantity =  unlist(Map(f = function(x) x$quantity$value, values)),
-  value =  unlist(Map(f = function(x) list(value = x$value$value), values))
+  value =  unlist(Map(f = function(x) list(value = x$value$value), values)),
+  stringsAsFactors = FALSE
 )
-vstruct <- toJSON(vdf, auto_unbox  = TRUE, pretty = TRUE)
-vstruct
+vdf
 ```
 
 ## Constraint Calls
@@ -36,16 +39,12 @@ dfrow <- function(x) data.frame(
   quantity = x$quantity$value,
   call = x$call$value,
   arg_name = x$arg_name$value,
-  arg_quantity = x$arg_quantity$value
+  arg_quantity = x$arg_quantity$value,
+  stringsAsFactors = FALSE
 )
 cdf <- Reduce(f = rbind, x = Map(f = dfrow, calls)) |>
-  arrange(quantity, call, arg_name) |>
-  mutate(split_key = paste(quantity, call, arg_name, sep = "&"))
-cdfs <- split(x = cdf, f = cdf$split_key)
-arg_q_map <- Map(f = function(df) df$arg_quantity, cdfs)
-flat_cdf <- cdf |> select(-arg_quantity) |> unique() |> mutate(arg_quantities = arg_q_map[split_key]) |> select(-split_key)
-cstruct <- toJSON(flat_cdf, pretty = TRUE)
-cstruct
+  arrange(quantity, call, arg_name)
+cdf
 ```
 
 ### Orchestration Graph
@@ -54,4 +53,29 @@ cstruct
 elist <- Reduce(f = c, x = Map(f = function(x) c(x$child$value, x$parent$value), edges), init = c())
 ograph <- graph_from_edgelist(matrix(elist, ncol = 2, byrow = TRUE))
 ograph
+```
+
+### Calculation Wrapper
+
+```{r}
+calculate_quantity <- function(quantity, cdata, vdata) {
+  call_info <- cdata[cdata$quantity == quantity, ]
+  call = call_info[1, "call"]
+  call_info_values <- merge(x = call_info, y = vdata, by.x = "arg_quantity", by.y = "quantity")
+  s <- split(call_info_values, call_info_values$arg_name)
+  arg_list <- Map(f = function(df) as.numeric(df$value), s)
+  rbind(vdata, c(quantity = quantity, value = do.call(call, arg_list)))
+}
+calculate_quantity(quantity = "http://opencaesar.io/firesat-telecom/description/downlink#spaceLoss", cdata = cdf, vdata = vdf)
+```
+
+### Method For Rollup
+
+```{r}
+update_values <- function(v, t, sl) {
+  if (length(sl) == 0) v else calculate_quantity(quantity = t, cdata = cdf, vdata = v)
+}
+validate_ds <- function(t, d) TRUE
+validate_tree <- function(t) TRUE
+rollup(ograph, vdf, update_values, validate_ds, validate_tree)
 ```

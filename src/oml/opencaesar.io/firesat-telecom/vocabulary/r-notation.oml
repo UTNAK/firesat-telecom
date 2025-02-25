@@ -30,7 +30,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/r-notation#> as r-no
 	@RArgument "gOverT"
 	ref relation downlink:analyzesGOverT
 	
-	@RFunction "MinEbOverN0"
+	@RFunction "minEbOverN0"
 	ref concept downlink:MinEbOverN0CausalConstraint
 	@RArgument "bitErrorRate"
 	ref relation downlink:analyzesBitErrorRate
@@ -44,8 +44,8 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/r-notation#> as r-no
 	
 	@RFunction "linkMargin"
 	ref concept downlink:LinkMarginCausalConstraint
-	@RArgument "eBOverN0"
+	@RArgument "ebOverN0"
 	ref relation downlink:analyzesEbOverN0
-	@RArgument "minEBOverN0"
+	@RArgument "minEbOverN0"
 	ref relation downlink:analyzesMinEbOverN0
 }
