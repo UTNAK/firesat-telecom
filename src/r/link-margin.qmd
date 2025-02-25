@@ -69,10 +69,9 @@ calculate_quantity <- function(quantity, cdata, vdata) {
   if (!is.na(encoding_scheme)) arg_list$encodingScheme = encoding_scheme
   rbind(vdata, c(quantity = quantity, value = do.call(call, arg_list)))
 }
-calculate_quantity(quantity = "http://opencaesar.io/firesat-telecom/description/downlink#spaceLoss", cdata = cdf, vdata = vdf)
 ```
 
-### Method For Rollup
+### Methods For Rollup
 
 ```{r}
 update_values <- function(v, t, sl) {
