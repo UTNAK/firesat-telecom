@@ -15,12 +15,9 @@ description <http://opencaesar.io/firesat-telecom/description/option-2#> as opti
 	//
 	//
 	
-	instance ebOverN0CausalConstraint : downlink:EbOverN0CausalConstraint [
-		downlink:explainsEbOverN0 downlink-description:ebOverN0
-		downlink:analyzesIrradiance downlink-description:irradiance
+	ref instance downlink-description:ebOverN0CausalConstraint : downlink:EbOverN0CausalConstraint [
 		downlink:analyzesGOverT downlink-description:gainOverSystemNoiseTemperature1
 		downlink:analyzesGOverT downlink-description:gainOverSystemNoiseTemperature2
-		downlink:analyzesBitRate downlink-description:bitRate
 	]
 	
 }

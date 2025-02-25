@@ -15,7 +15,7 @@ suppressPackageStartupMessages({
 
 source("link-margin.R")
 
-path <- "../../build/results/firesat-telecom/option-2/"
+path <- "../../build/results/firesat-telecom/"
 
 edges <- read_json(paste0(path, "edges.json"))$results$bindings
 values <- read_json(paste0(path, "values.json"))$results$bindings

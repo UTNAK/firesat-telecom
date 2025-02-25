@@ -189,6 +189,12 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 		downlink:analyzesFrequency frequency
 	]
 	
+	instance ebOverN0CausalConstraint : downlink:EbOverN0CausalConstraint [
+		downlink:explainsEbOverN0 downlink-description:ebOverN0
+		downlink:analyzesIrradiance downlink-description:irradiance
+		downlink:analyzesBitRate downlink-description:bitRate
+	]
+	
 	instance minEbOverN0CausalConstraint : downlink:MinEbOverN0CausalConstraint [
 		downlink:explainsMinEbOverN0 minEbOverN0
 		downlink:analyzesBitErrorRate bitErrorRate
