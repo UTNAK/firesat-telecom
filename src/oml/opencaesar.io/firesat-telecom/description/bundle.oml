@@ -7,8 +7,6 @@ description bundle <http://opencaesar.io/firesat-telecom/description/bundle#> as
 
 	uses <http://opencaesar.io/firesat-telecom/vocabulary/bundle#>
 	
-	includes <http://opencaesar.io/firesat-telecom/description/option-1#>
-//	includes <http://opencaesar.io/firesat-telecom/description/option-2#>
-//	includes <http://opencaesar.io/firesat-telecom/description/option-3#>
+	extends <http://opencaesar.io/firesat-telecom/description/option-1#>
 	
 }
