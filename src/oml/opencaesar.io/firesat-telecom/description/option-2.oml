@@ -1,0 +1,25 @@
+@dc:title "Example Description"
+@dc:creator "Example Company"
+@dc:rights "Copyright 2019, by Example Company"
+description <http://opencaesar.io/firesat-telecom/description/option-2#> as option-2 {
+	
+	uses <http://purl.org/dc/elements/1.1/> as dc
+	uses <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downlink
+	
+	extends <http://opencaesar.io/firesat-telecom/description/downlink#> as downlink-description
+	
+	//
+	//
+	// Causal Constraints
+	//
+	//
+	
+	instance ebOverN0CausalConstraint : downlink:EbOverN0CausalConstraint [
+		downlink:explainsEbOverN0 downlink-description:ebOverN0
+		downlink:analyzesIrradiance downlink-description:irradiance
+		downlink:analyzesGOverT downlink-description:gainOverSystemNoiseTemperature1
+		downlink:analyzesGOverT downlink-description:gainOverSystemNoiseTemperature2
+		downlink:analyzesBitRate downlink-description:bitRate
+	]
+	
+}

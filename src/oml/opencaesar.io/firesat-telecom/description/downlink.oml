@@ -138,7 +138,6 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	// Receiver 2 Quantities
 	//
 	
-	@rdfs:label "G/T 2"
 	instance gainOverSystemNoiseTemperature2 : downlink:GainOverSystemNoiseTemperature
 	
 	instance gainOverSystemNoiseTemperature2_1 : metrology:GOverT_dBK [
@@ -160,11 +159,10 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 	// Receiver 3 Quantities
 	//
 	
-	@rdfs:label "G/T 3"
 	instance gainOverSystemNoiseTemperature3 : downlink:GainOverSystemNoiseTemperature
 	
 	instance gainOverSystemNoiseTemperature3_1 : metrology:GOverT_dBK [
-		vim4:hasDoubleNumber "21"^^xsd:double
+		vim4:hasDoubleNumber "26"^^xsd:double
 		vim4:isAttributedTo gainOverSystemNoiseTemperature3
 	]
 	
@@ -178,14 +176,6 @@ description <http://opencaesar.io/firesat-telecom/description/downlink#> as down
 		downlink:explainsLinkMargin linkMargin
 		downlink:analyzesEbOverN0 ebOverN0
 		downlink:analyzesMinEbOverN0 minEbOverN0
-	]
-	
-	instance ebOverN0CausalConstraint : downlink:EbOverN0CausalConstraint [
-		downlink:explainsEbOverN0 ebOverN0
-		downlink:analyzesIrradiance irradiance
-		downlink:analyzesGOverT gainOverSystemNoiseTemperature1
-		downlink:analyzesGOverT gainOverSystemNoiseTemperature2
-		downlink:analyzesBitRate bitRate
 	]
 	
 	instance irradianceCausalConstraint : downlink:IrradianceCausalConstraint [
