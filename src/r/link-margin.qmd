@@ -40,6 +40,7 @@ dfrow <- function(x) data.frame(
   call = x$call$value,
   arg_name = x$arg_name$value,
   arg_quantity = x$arg_quantity$value,
+  encoding_scheme = if (is.null(es <- x$encoding_scheme)) NA else es$value,
   stringsAsFactors = FALSE
 )
 cdf <- Reduce(f = rbind, x = Map(f = dfrow, calls)) |>
@@ -64,6 +65,8 @@ calculate_quantity <- function(quantity, cdata, vdata) {
   call_info_values <- merge(x = call_info, y = vdata, by.x = "arg_quantity", by.y = "quantity")
   s <- split(call_info_values, call_info_values$arg_name)
   arg_list <- Map(f = function(df) as.numeric(df$value), s)
+  encoding_scheme <- call_info[1, "encoding_scheme"]
+  if (!is.na(encoding_scheme)) arg_list$encodingScheme = encoding_scheme
   rbind(vdata, c(quantity = quantity, value = do.call(call, arg_list)))
 }
 calculate_quantity(quantity = "http://opencaesar.io/firesat-telecom/description/downlink#spaceLoss", cdata = cdf, vdata = vdf)

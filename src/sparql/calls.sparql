@@ -1,18 +1,19 @@
 PREFIX rdfs:		<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX constraint:	<http://opencaesar.io/firesat-telecom/vocabulary/constraint#>
+PREFIX downlink:	<http://opencaesar.io/firesat-telecom/vocabulary/downlink#>
 PREFIX r-notation:	<http://opencaesar.io/firesat-telecom/vocabulary/r-notation#>
 
-SELECT ?quantity ?call ?arg_name ?arg_quantity
+SELECT ?quantity ?call ?arg_name ?arg_quantity ?encoding_scheme
 
 WHERE {
 	?analyzes rdfs:subPropertyOf constraint:analyzesQuantity ;
 			r-notation:RArgument ?arg_name .
 			
-	[
+	?constraint
 		a constraint:CausalConstraint ;
 		constraint:explainsQuantity ?quantity ;
 		a [ r-notation:RFunction ?call ] ;
-		?analyzes ?arg_quantity 
-	]
+		?analyzes ?arg_quantity .
+	 optional { ?constraint downlink:usesEncodingScheme ?encoding_scheme }
 	
 }

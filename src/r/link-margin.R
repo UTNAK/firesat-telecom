@@ -5,13 +5,20 @@ spaceLoss <- function(spacePathLength, frequency) {
   2 * dB(3e8 / (4 * pi * spacePathLength * frequency))
 }
 
-informationRate <- function(bitRate) {
-  bitRate
+informationRate <- function(bitRate, encodingScheme) {
+  penalty <- c(1, 255/223 * 2)
+  names(penalty) <- c("BPSK", "BPSKRSV")
+  bitRate / penalty[encodingScheme]
 }
 
 erfcinv <- function (x) qnorm(x / 2, lower = FALSE) / sqrt(2)
-minEbOverN0 <- function(bitErrorRate) {
-  erfcinv(2 * bitErrorRate)^2
+minEbOverN0 <- function(bitErrorRate, encodingScheme) {
+  t <- list(
+    BPSK = function(x) erfcinv(2 * x)^2,
+    BPSKRSV = function(x) 1.96667 - .06667 * log10(x)
+  )
+  m <- match(encodingScheme, names(t))
+  if (!is.na(m)) (t[[m]])(bitErrorRate) else NA
 }
 
 irradiance <- function(effectivePower, spaceLoss) {
