@@ -7,6 +7,6 @@ description bundle <http://opencaesar.io/firesat-telecom/telecom-supplier/descri
 
 	uses <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/bundle#>
 	
-	extends <http://opencaesar.io/firesat-telecom/telecom-supplier/description/option-2#>
+	extends <http://opencaesar.io/firesat-telecom/telecom-supplier/description/option-4#>
 	
 }
