@@ -48,4 +48,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/r-n
 	ref relation downlink:analyzesEbOverN0
 	@RArgument "minEbOverN0"
 	ref relation downlink:analyzesMinEbOverN0
+
+	@RFunction "arrayGOverT"
+	ref concept downlink:ArrayGainOverSystemNoiseTemperatureCausalConstraint
 }

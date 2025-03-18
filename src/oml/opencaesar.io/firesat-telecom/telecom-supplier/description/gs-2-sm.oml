@@ -14,9 +14,20 @@ description <http://opencaesar.io/firesat-telecom/telecom-supplier/description/g
 	//
 	//
 	
-	ref instance downlink-description:ebOverN0CausalConstraint : downlink:EbOverN0CausalConstraint [
+	instance receiverArray : downlink:Receiver [
+		downlink:hasGainOverSystemNoiseTemperature arrayGainOverSystemNoiseTemperature
+	]
+	
+	instance arrayGainOverSystemNoiseTemperature : downlink:GainOverSystemNoiseTemperature
+	
+	instance arrayGainOverSystemNoiseTemperatureCausalContraint : downlink:ArrayGainOverSystemNoiseTemperatureCausalConstraint [
+		downlink:explainsGOverT arrayGainOverSystemNoiseTemperature
 		downlink:analyzesGOverT downlink-description:gainOverSystemNoiseTemperature1
 		downlink:analyzesGOverT downlink-description:gainOverSystemNoiseTemperature2
+	]
+	
+	ref instance downlink-description:ebOverN0CausalConstraint : downlink:EbOverN0CausalConstraint [
+		downlink:analyzesGOverT arrayGainOverSystemNoiseTemperature
 	]
 	
 }

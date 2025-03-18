@@ -346,6 +346,13 @@ vocabulary <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/dow
 		reverse hasGainOverSystemNoiseTemperature
 	] < vim4:Characterizes
 	
+	concept ArrayGainOverSystemNoiseTemperatureCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 GainOverSystemNoiseTemperature
+		restricts all analysis:analyzes to GainOverSystemNoiseTemperature
+	]
+	
+	relation explainsGOverT < constraint:explainsQuantity
+	
 	//
 	//
 	// Special-Purpose Concept Specializations

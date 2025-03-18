@@ -71,11 +71,12 @@ calculate_quantity <- function(quantity, cdata, vdata) {
   call_info <- cdata[cdata$quantity == quantity, ]
   call = call_info[1, "call"]
   call_info_values <- merge(x = call_info, y = vdata, by.x = "arg_quantity", by.y = "quantity")
-  s <- split(call_info_values, call_info_values$arg_name)
-  arg_list <- Map(f = function(df) as.numeric(df$value), s)
+  arg_list <- Map(f = function(n, v, u) list(value = as.numeric(v), unit = u),
+                  call_info_values$arg_name, call_info_values$value, call_info_values$unit)
   encoding_scheme <- call_info[1, "encoding_scheme"]
   if (!is.na(encoding_scheme)) arg_list$encodingScheme = encoding_scheme
-  rbind(vdata, c(quantity = quantity, value = do.call(call, arg_list)))
+  r <- do.call(call, arg_list)
+  rbind(vdata, c(quantity = quantity, value = r$value, unit = r$unit))
 }
 ```
 
