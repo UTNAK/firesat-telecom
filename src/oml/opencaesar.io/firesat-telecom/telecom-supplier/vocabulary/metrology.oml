@@ -1,7 +1,7 @@
 @dc:title "Example Vocabulary"
 @dc:creator "Example Company"
 @dc:rights "Copyright 2019, by Example Company"
-vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/metrology#> as metrology {
+vocabulary <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/metrology#> as metrology {
 	
 	//extends <http://www.w3.org/2000/01/rdf-schema#> as rdfs
 	extends <http://purl.org/dc/elements/1.1/> as dc
@@ -11,7 +11,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/metrology#> as metro
 	uses <http://iso.org/iso-80000-3.15#> as iso-80000-3.15
 	uses <http://iso.org/iec-80000-6.45#> as iec-80000-6.45
 	
-	uses <http://opencaesar.io/firesat-telecom/description/metrology#> as metrology-description
+	uses <http://opencaesar.io/firesat-telecom/telecom-supplier/description/metrology#> as metrology-description
 
 	concept Frequency < vim4:InherentUnitaryQuantity [
 		restricts vim4:instantiates to iso-80000-3.15:frequency

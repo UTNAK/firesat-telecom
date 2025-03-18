@@ -1,15 +1,15 @@
 @dc:title "Example Vocabulary"
 @dc:creator "Example Company"
 @dc:rights "Copyright 2019, by Example Company"
-vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downlink {
+vocabulary <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/downlink#> as downlink {
 	
 	extends <http://www.w3.org/2000/01/rdf-schema#> as rdfs
 	extends <http://purl.org/dc/elements/1.1/> as dc
 	extends <http://imce.jpl.nasa.gov/foundation/analysis#> as analysis
 	extends <http://imce.jpl.nasa.gov/foundation/mission#> as mission
 	extends <http://bipm.org/jcgm/vim4#> as vim4
-	extends <http://opencaesar.io/firesat-telecom/vocabulary/constraint#> as constraint
-	extends <http://opencaesar.io/firesat-telecom/vocabulary/metrology#> as metrology
+	extends <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/constraint#> as constraint
+	extends <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/metrology#> as metrology
 	
 	uses <http://iso.org/iso-80000-3.15#> as iso-80000-3.15
 

@@ -1,7 +1,7 @@
 PREFIX rdfs:		<http://www.w3.org/2000/01/rdf-schema#>
-PREFIX constraint:	<http://opencaesar.io/firesat-telecom/vocabulary/constraint#>
-PREFIX downlink:	<http://opencaesar.io/firesat-telecom/vocabulary/downlink#>
-PREFIX r-notation:	<http://opencaesar.io/firesat-telecom/vocabulary/r-notation#>
+PREFIX constraint:	<http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/constraint#>
+PREFIX downlink:	<http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/downlink#>
+PREFIX r-notation:	<http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/r-notation#>
 
 SELECT ?quantity ?call ?arg_name ?arg_quantity ?encoding_scheme
 

@@ -1,10 +1,10 @@
 @dc:title "Example Vocabulary"
 @dc:creator "Example Company"
 @dc:rights "Copyright 2019, by Example Company"
-vocabulary <http://opencaesar.io/firesat-telecom/vocabulary/r-notation#> as r-notation {
+vocabulary <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/r-notation#> as r-notation {
 	
 	extends <http://purl.org/dc/elements/1.1/> as dc
-	extends <http://opencaesar.io/firesat-telecom/vocabulary/downlink#> as downlink
+	extends <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/downlink#> as downlink
 	
 	annotation property RFunction
 	annotation property RArgument

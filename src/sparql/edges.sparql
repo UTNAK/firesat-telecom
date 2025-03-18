@@ -1,5 +1,5 @@
 PREFIX analysis:	<http://imce.jpl.nasa.gov/foundation/analysis#>
-PREFIX constraint:	<http://opencaesar.io/firesat-telecom/vocabulary/constraint#>
+PREFIX constraint:	<http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/constraint#>
 
 SELECT ?child ?parent
 

@@ -1,0 +1,13 @@
+@dc:title "Example Description Bundle"
+@dc:creator "Example Company"
+@dc:rights "Copyright 2019, by Example Company"
+description bundle <http://opencaesar.io/firesat-telecom/telecom-supplier/description/option-2#> as option-2 {
+	
+	uses <http://purl.org/dc/elements/1.1/> as dc	
+
+	uses <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/bundle#>
+	
+	includes <http://opencaesar.io/firesat-telecom/telecom-supplier/description/gs-2-sm#>
+	includes <http://opencaesar.io/firesat-telecom/telecom-supplier/description/coding#>
+	
+}
