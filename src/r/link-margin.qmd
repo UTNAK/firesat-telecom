@@ -28,6 +28,7 @@ calls <- read_json(paste0(path, "calls.json"))$results$bindings
 vdf <- data.frame(
   quantity =  unlist(Map(f = function(x) x$quantity$value, values)),
   value =  unlist(Map(f = function(x) list(value = x$value$value), values)),
+  unit =  unlist(Map(f = function(x) list(unit = x$unit$value), values)),
   stringsAsFactors = FALSE
 )
 knitr::kable(vdf)
@@ -89,3 +90,9 @@ validate_tree <- function(t) is_dag(t)
 result <- rollup(ograph, vdf, update_values, validate_ds, validate_tree)
 knitr::kable(result)
 ```
+### Save Final Result
+
+```{r}
+write_json(result, paste0(path, "downlink.json"), pretty = TRUE)
+```
+

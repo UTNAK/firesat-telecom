@@ -97,11 +97,6 @@ description <http://opencaesar.io/firesat-telecom/telecom-supplier/description/d
 	
 	instance effectiveIsotropicRadiatedPower : downlink:EffectiveIsotropicRadiatedPower
 	
-	instance effectiveIsotropicRadiatedPower_1 : metrology:RadiatedPower_dBW [
-		vim4:hasDoubleNumber "17.61292"^^xsd:double
-		vim4:isAttributedTo effectiveIsotropicRadiatedPower
-	]
-	
 	//
 	//
 	// Receiver 1
