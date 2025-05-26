@@ -8,6 +8,7 @@ vocabulary <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/met
 	extends <http://bipm.org/jcgm/vim4#> as vim4
 	
 	uses <http://iso.org/iso-80000-3.1#> as iso-80000-3.1
+	uses <http://iso.org/iso-80000-3.5#> as iso-80000-3.5
 	uses <http://iso.org/iso-80000-3.15#> as iso-80000-3.15
 	uses <http://iso.org/iec-80000-6.45#> as iec-80000-6.45
 	
@@ -75,5 +76,17 @@ vocabulary <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/met
 	
 	concept GOverT_dBK < vim4:UnitaryQuantityValue [
 		restricts vim4:unit to metrology-description:dBK
+	]
+	
+	concept PlaneAngle < vim4:InherentUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.5:plane-angle
+	]
+	
+	concept PlaneAngle_deg < vim4:UnitaryQuantityValue [
+		restricts vim4:unit to iso-80000-3.5:degree-of-arc
+	]
+
+	concept PlaneAngle_rad < vim4:UnitaryQuantityValue [
+		restricts vim4:unit to iso-80000-3.5:radian
 	]
 }

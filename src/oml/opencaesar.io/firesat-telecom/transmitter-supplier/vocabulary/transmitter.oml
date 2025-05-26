@@ -1,0 +1,423 @@
+@dc:title "Example Vocabulary"
+@dc:creator "Example Company"
+@dc:rights "Copyright 2019, by Example Company"
+vocabulary <http://opencaesar.io/firesat-telecom/transmitter-supplier/vocabulary/transmitter#> as transmitter {
+	
+	extends <http://www.w3.org/2000/01/rdf-schema#> as rdfs
+	extends <http://purl.org/dc/elements/1.1/> as dc
+	extends <http://imce.jpl.nasa.gov/foundation/analysis#> as analysis
+	extends <http://imce.jpl.nasa.gov/foundation/mission#> as mission
+	extends <http://bipm.org/jcgm/vim4#> as vim4
+	extends <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/constraint#> as constraint
+	extends <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/metrology#> as metrology
+	extends <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/downlink#> as downlink
+	
+	uses <http://iso.org/iso-80000-3.15#> as iso-80000-3.15
+
+	//
+	//
+	// Power Amplifier
+	//
+	//
+	
+	concept Amplifier < mission:Component, vim4:Object [
+		restricts hasAmplifierPower to exactly 1
+	]
+	
+	//
+	//
+	// Asserted Quantities
+	//
+	//
+	
+	//
+	// Transmitter Power
+	//
+	
+	concept AmplifierPower < metrology:RadiatedPower [
+		restricts all vim4:characterizes to Amplifier
+	]
+	
+	relation entity IsAmplifierPowerOf [
+		from AmplifierPower
+		to Amplifier
+		forward isAmplifierPowerOf
+		reverse hasAmplifierPower
+	] < vim4:Characterizes
+	
+	//
+	//
+	// Transmission Line
+	//
+	//
+	
+	concept TransmissionLine < mission:Component, vim4:Object [
+		restricts hasLineLoss to exactly 1
+	]
+	
+	//
+	// Line Loss
+	//
+	
+	concept LineLoss < metrology:Gain [
+		restricts all vim4:characterizes to TransmissionLine
+	]
+	
+	relation entity IsLineLossOf [
+		from LineLoss
+		to TransmissionLine
+		forward isLineLossOf
+		reverse hasLineLoss
+	] < vim4:Characterizes
+	
+	//
+	//
+	// Antenna
+	//
+	//
+	
+	concept Antenna < mission:Component, vim4:Object [
+		restricts hasBeamWidth to exactly 1
+		restricts hasPeakGain to exactly 1
+		restricts hasPointingOffset to exactly 1
+		restricts hasPointingLoss to exactly 1
+		restricts hasNetGain to exactly 1
+	]
+	
+	//
+	// Beam Width
+	//
+	
+	concept BeamWidth < metrology:PlaneAngle [
+		restricts all vim4:characterizes to Antenna
+	]
+	
+	relation entity IsBeamWidthOf [
+		from BeamWidth
+		to Antenna
+		forward isBeamWidthOf
+		reverse hasBeamWidth
+	] < vim4:Characterizes
+	
+	//
+	// Peak Antenna Gain
+	//
+	
+	concept PeakGain < metrology:Gain [
+		restricts all vim4:characterizes to Antenna
+	]
+	
+	relation entity IsPeakGainOf [
+		from PeakGain
+		to Antenna
+		forward isPeakGainOf
+		reverse hasPeakGain
+	] < vim4:Characterizes
+	
+	//
+	// Pointing Offset
+	//
+	
+	concept PointingOffset < metrology:PlaneAngle [
+		restricts all vim4:characterizes to Antenna
+	]
+	
+	relation entity IsPointingOffsetOf [
+		from PointingOffset
+		to Antenna
+		forward isPointingOffsetOf
+		reverse hasPointingOffset
+	] < vim4:Characterizes
+		
+	//
+	// Pointing Loss
+	//
+	
+	concept PointingLoss < metrology:Gain [
+		restricts all vim4:characterizes to Antenna
+	]
+	
+	relation entity IsPointingLossOf [
+		from PointingLoss
+		to Antenna
+		forward isPointingLossOf
+		reverse hasPointingLoss
+	] < vim4:Characterizes
+	
+	//
+	// Net Gain
+	//
+	
+	concept NetGain < metrology:Gain [
+		restricts all vim4:characterizes to Antenna
+	]
+	
+	relation entity IsNetGainOf [
+		from NetGain
+		to Antenna
+		forward isNetGainOf
+		reverse hasNetGain
+	] < vim4:Characterizes
+	
+	//
+	//
+	// Causally-Constrained Quantities
+	//
+	//
+	
+	//
+	// Space Loss
+	//
+	
+	concept SpaceLoss < metrology:Gain [
+		restricts all vim4:characterizes to downlink:DownlinkArrangement
+	]
+	
+	relation entity IsSpaceLossOf [
+		from SpaceLoss
+		to downlink:DownlinkArrangement
+		forward isSpaceLossOf
+		reverse hasSpaceLoss
+	] < vim4:Characterizes
+	
+	concept SpaceLossCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 SpaceLoss
+		restricts analysis:analyzes to exactly 2
+		restricts analyzesSpacePathLength to exactly 1 downlink:SpacePathLength
+		restricts analyzesFrequency to exactly 1 downlink:Frequency
+	]
+	
+	relation explainsSpaceLoss < constraint:explainsQuantity
+	relation analyzesSpacePathLength < constraint:analyzesQuantity
+	relation analyzesFrequency < constraint:analyzesQuantity
+	
+	//
+	// Irradiance
+	//
+	
+	concept Irradiance < metrology:Irradiance [
+		restricts all vim4:characterizes to downlink:DownlinkArrangement
+	]
+	
+	relation entity IsIrradianceOf [
+		from Irradiance
+		to downlink:DownlinkArrangement
+		forward isIrradianceOf
+		reverse hasIrradiance
+	] < vim4:Characterizes
+
+	concept IrradianceCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 Irradiance
+		restricts analysis:analyzes to exactly 2
+		restricts analyzesEffectivePower to exactly 1 EffectiveIsotropicRadiatedPower
+		restricts analyzesSpaceLoss to exactly 1 SpaceLoss
+	]
+	
+	relation explainsIrradiance < constraint:explainsQuantity	@rdfs:label "P_o"
+	relation analyzesEffectivePower < constraint:analyzesQuantity
+	relation analyzesSpaceLoss < constraint:analyzesQuantity
+	
+	//
+	// Eb/N0
+	//
+	
+	concept EbOverN0 < metrology:EbOverN0 [
+		restricts all vim4:characterizes to downlink:DownlinkArrangement
+	]
+	
+	relation entity IsEbOverN0Of [
+		from EbOverN0
+		to downlink:DownlinkArrangement
+		forward isEbOverN0Of
+		reverse hasEbOverN0
+	] < vim4:Characterizes
+
+	concept EbOverN0CausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 EbOverN0
+		restricts analyzesIrradiance to exactly 1 Irradiance
+		restricts all analyzesGOverT to GainOverSystemNoiseTemperature
+		restricts analyzesBitRate to exactly 1 downlink:BitRate
+	]
+	
+	relation explainsEbOverN0 < constraint:explainsQuantity
+	relation analyzesIrradiance < constraint:analyzesQuantity
+	relation analyzesGOverT < constraint:analyzesQuantity
+	
+	//
+	// Minimum Eb/N0
+	//
+	
+	concept MinEbOverN0 < vim4:InherentUnitaryQuantity [
+		// dimension one
+		restricts all vim4:characterizes to downlink:DownlinkArrangement
+	]
+	
+	relation entity IsMinEbOverN0Of [
+		from MinEbOverN0
+		to downlink:DownlinkArrangement
+		forward isMinEbOverN0Of
+		reverse hasMinEbOverN0
+	] < vim4:Characterizes
+	
+	concept MinEbOverN0CausalConstraint < CausalConstraintUsingEncodingScheme [
+		restricts analysis:explains to exactly 1 MinEbOverN0
+		restricts analysis:analyzes to exactly 1
+		restricts analyzesBitErrorRate to exactly 1 downlink:BitErrorRate
+	]
+
+	relation explainsMinEbOverN0 < constraint:explainsQuantity
+	@rdfs:label "R_e"
+	relation analyzesBitErrorRate < constraint:analyzesQuantity
+	
+	//
+	// Information Rate
+	//
+	
+	concept InformationRate < vim4:InherentUnitaryQuantity [
+		restricts vim4:instantiates to iso-80000-3.15:frequency
+		restricts all vim4:characterizes to downlink:DownlinkArrangement
+	]
+	
+	relation entity IsInformationRateOf [
+		from InformationRate
+		to downlink:DownlinkArrangement
+		forward isInformationRateOf
+		reverse hasInformationRate
+	] < vim4:Characterizes
+
+	@rdfs:label "R_i"
+	concept InformationRateCausalConstraint < CausalConstraintUsingEncodingScheme [
+		restricts analysis:explains to exactly 1 InformationRate
+		restricts analysis:analyzes to exactly 1
+		restricts analyzesBitRate to exactly 1 downlink:BitRate
+	]
+	
+	relation explainsInformationRate < constraint:explainsQuantity
+	@rdfs:label "R_b"
+	relation analyzesBitRate < constraint:analyzesQuantity
+	
+	//
+	// Link Margin
+	//
+	
+	concept LinkMargin < vim4:InherentUnitaryQuantity [
+		// dimension one
+		restricts all vim4:characterizes to downlink:DownlinkArrangement
+	]
+	
+	relation entity IsLinkMarginOf [
+		from LinkMargin
+		to downlink:DownlinkArrangement
+		forward isLinkMarginOf
+		reverse hasLinkMargin
+	] < vim4:Characterizes
+	
+	@rdfs:label "M_l"
+	concept LinkMarginCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 LinkMargin
+		restricts analysis:analyzes to exactly 2
+		restricts analyzesEbOverN0 to exactly 1 EbOverN0
+		restricts analyzesMinEbOverN0 to exactly 1 MinEbOverN0
+	]
+	
+	relation explainsLinkMargin < constraint:explainsQuantity
+	@rdfs:label "Eb_N0"
+	relation analyzesEbOverN0 < constraint:analyzesQuantity
+	@rdfs:label "min_Eb_N0"
+	relation analyzesMinEbOverN0 < constraint:analyzesQuantity
+	
+	//
+	//
+	//
+	// Transmitter
+	//
+	//
+	//
+	
+	concept Transmitter < mission:Component, vim4:Object [
+		restricts hasEffectiveIsotropicRadiatedPower to exactly 1
+	]
+	
+	//
+	//
+	// Asserted Quantities
+	//
+	//
+	
+	//
+	// Effective Isotropic Radiated Power
+	//
+	
+	concept EffectiveIsotropicRadiatedPower < metrology:RadiatedPower [
+		restricts vim4:characterizes to exactly 1 Transmitter
+	]
+	
+	relation entity IsEffectiveIsotropicRadiatedPowerOf [
+		from EffectiveIsotropicRadiatedPower
+		to Transmitter
+		forward isEffectiveIsotropicRadiatedPowerOf
+		reverse hasEffectiveIsotropicRadiatedPower
+	] < vim4:Characterizes 
+	
+	//
+	//
+	//
+	// Receiver
+	//
+	//
+	//
+	
+	concept Receiver < mission:Component, vim4:Object [
+		restricts hasGainOverSystemNoiseTemperature to exactly 1
+	]
+	
+	//
+	//
+	// Asserted Quantities
+	//
+	//
+	
+	//
+	// Gain Over System Noise Temperature
+	//
+	
+	concept GainOverSystemNoiseTemperature < metrology:GOverT [
+		restricts vim4:characterizes to exactly 1 Receiver
+	]
+	
+	relation entity IsGainOverSystemNoiseTemperatureOf [
+		from GainOverSystemNoiseTemperature
+		to Receiver
+		forward isGainOverSystemNoiseTemperatureOf
+		reverse hasGainOverSystemNoiseTemperature
+	] < vim4:Characterizes
+	
+	concept ArrayGainOverSystemNoiseTemperatureCausalConstraint < constraint:CausalConstraint [
+		restricts analysis:explains to exactly 1 GainOverSystemNoiseTemperature
+		restricts all analysis:analyzes to GainOverSystemNoiseTemperature
+	]
+	
+	relation explainsGOverT < constraint:explainsQuantity
+	
+	//
+	//
+	// Special-Purpose Concept Specializations
+	//
+	//
+	
+	ref concept vim4:InherentUnitaryQuantity < analysis:AnalyzedElement
+	
+	concept CausalConstraintUsingEncodingScheme < constraint:CausalConstraint
+	
+	scalar property usesEncodingScheme [
+		domain CausalConstraintUsingEncodingScheme
+		range downlink:EncodingScheme
+		functional
+	]
+	
+	rule setCausalConstraintEncodingScheme [
+		CausalConstraintUsingEncodingScheme(cc) & analysis:explains(cc, q) & vim4:characterizes(q, dla)
+			& downlink:DownlinkArrangement(dla) & downlink:hasEncodingScheme(dla, es) -> downlink:usesEncodingScheme(cc, es)
+	]
+	
+}
