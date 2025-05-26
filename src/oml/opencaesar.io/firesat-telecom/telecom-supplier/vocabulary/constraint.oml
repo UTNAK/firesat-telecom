@@ -8,26 +8,41 @@ vocabulary <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/con
 	extends <http://imce.jpl.nasa.gov/foundation/analysis#> as analysis
 
 	//
-	// Causal Constraint
+	// Constraint
 	//
 	
-	concept CausalConstraint < analysis:Explanation [
-		restricts explainsQuantity to exactly 1
-	]
+	concept Constraint < analysis:Explanation
 
+	
 	relation entity ExplainsQuantity [
-		from CausalConstraint
+		from Constraint
 		to vim4:IndividualUnitaryQuantity
 		forward explainsQuantity
 		functional
 	] < analysis:Explains
 	
 	relation entity AnalyzesQuantity [
-		from CausalConstraint
+		from Constraint
 		to vim4:IndividualUnitaryQuantity
 		forward analyzesQuantity
 	] < analysis:Analyzes
 	
+	//
+	// Acausal Constraint
+	//
+	
+	concept AcausalConstraint < Constraint [
+		restricts explainsQuantity to exactly 0
+	]
+	
+	//
+	// Causal Constraint
+	//
+	
+	concept CausalConstraint < Constraint [
+		restricts explainsQuantity to exactly 1
+	]
+
 	//
 	// Binding Constraint
 	//
