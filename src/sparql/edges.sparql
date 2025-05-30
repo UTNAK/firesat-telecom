@@ -1,12 +1,15 @@
 PREFIX analysis:	<http://imce.jpl.nasa.gov/foundation/analysis#>
 PREFIX constraint:	<http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/constraint#>
+PREFIX rdfs:		<http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?child ?parent
+SELECT ?child ?child_label ?parent ?parent_label
 
 WHERE {
 	[
 		a constraint:CausalConstraint;
-		analysis:explains ?parent;
-		analysis:analyzes ?child;
-	]
+			analysis:explains ?parent;
+			analysis:analyzes ?child;
+	] .
+	?child rdfs:label ?child_label .
+	?parent rdfs:label ?parent_label .
 }

@@ -3,6 +3,7 @@
 @dc:rights "Copyright 2019, by Example Company"
 description <http://opencaesar.io/firesat-telecom/telecom-supplier/description/gs-3#> as gs-3 {
 	
+	uses <http://www.w3.org/2000/01/rdf-schema#> as rdfs
 	uses <http://purl.org/dc/elements/1.1/> as dc
 	uses <http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/downlink#> as downlink
 	
@@ -14,10 +15,12 @@ description <http://opencaesar.io/firesat-telecom/telecom-supplier/description/g
 	//
 	//
 	
+	@rdfs:label "receiver array"
 	instance receiverArray : downlink:Receiver [
 		downlink:hasGainOverSystemNoiseTemperature arrayGainOverSystemNoiseTemperature
 	]
 	
+	@rdfs:label "array G/T"
 	instance arrayGainOverSystemNoiseTemperature : downlink:GainOverSystemNoiseTemperature
 	
 	instance arrayGainOverSystemNoiseTemperatureCausalContraint : downlink:ArrayGainOverSystemNoiseTemperatureCausalConstraint [

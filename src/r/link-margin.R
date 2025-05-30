@@ -1,5 +1,5 @@
-dB <- function(x) 10 * log10(x)
-dBinv <- function(x) 10^(x / 10)
+dB <- function(x) { 10 * log10(x) }
+dBinv <- function(x) { 10 ^ (x / 10) }
 
 spaceLoss <- function(spacePathLength, frequency) {
   if (spacePathLength$unit != "metre") stop("invalid space path length unit")
@@ -14,7 +14,7 @@ informationRate <- function(bitRate, encodingScheme) {
   list(value = bitRate$value / penalty[encodingScheme], unit = "hertz")
 }
 
-erfcinv <- function (x) qnorm(x / 2, lower = FALSE) / sqrt(2)
+erfcinv <- function (x) { qnorm(x / 2, lower = FALSE) / sqrt(2) }
 minEbOverN0 <- function(bitErrorRate, encodingScheme) {
   if (bitErrorRate$unit != "one") stop("invalid bit error rate unit")
   t <- list(
@@ -37,12 +37,12 @@ arrayGOverT <- function(...) {
   list(value = dB(Reduce('+', Map(f = function(g) dBinv(g$value), gl))), unit = "dB/K")
 }
 
-k_dB <- dB(1.380649e+23)
+k_dB <- function() { dB(1.380649e+23) }
 ebOverN0 <- function(gOverT, irradiance, bitRate) {
   if (gOverT$unit != "dB/K") stop("invalid G/T unit")
   if (irradiance$unit != "dBW/m^2") stop("invalid irradiance unit")
   if (bitRate$unit != "hertz") stop("invalid bit rate unit")
-  list(value = irradiance$value + gOverT$value + k_dB - dB(bitRate$value), unit = "dB")
+  list(value = irradiance$value + gOverT$value + k_dB() - dB(bitRate$value), unit = "dB")
 }
 
 linkMargin <- function(ebOverN0, minEbOverN0) {

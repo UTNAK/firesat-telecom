@@ -11,6 +11,8 @@ suppressPackageStartupMessages({
   library(jsonlite)
   library(igraph)
   library(rollupTree)
+  library(magrittr)
+  library(DiagrammeR)
 })
 
 source("link-margin.R")
@@ -57,6 +59,7 @@ elist <- Reduce(f = c, x = Map(f = function(x) c(x$child$value, x$parent$value),
 ograph <- graph_from_edgelist(matrix(elist, ncol = 2, byrow = TRUE))
 ograph
 ```
+
 ### Calculation Order
 
 ```{r echo = FALSE}
@@ -91,9 +94,86 @@ validate_tree <- function(t) is_dag(t)
 result <- rollup(ograph, vdf, update_values, validate_ds, validate_tree)
 knitr::kable(result)
 ```
+
 ### Save Final Result
 
 ```{r}
 write_json(result, paste0(path, "downlink.json"), pretty = TRUE)
 ```
 
+## State Effects Diagram
+
+```{r}
+se_el <- do.call(rbind, lapply(edges, FUN = function(l) c(l$child_label$value, l$parent_label$value)))
+se_vl = union(se_el[,1], se_el[,2])
+se_nodes_df <- create_node_df(n = length(se_vl), type = NULL, label = se_vl)
+se_edges_df <- create_edge_df(from = match(se_el[,1], se_nodes_df$label), to = match(se_el[,2], se_nodes_df$label))
+se_g <- create_graph(nodes_df = se_nodes_df, edges_df = se_edges_df)
+render_graph(se_g)
+```
+
+## State Effects Models in R
+
+### Constants
+
+Boltzman's Constant in dB:
+
+```{r}
+k_dB
+```
+
+### Utility Functions
+
+```{r}
+dB
+```
+
+```{r}
+dBinv
+```
+
+```{r}
+erfcinv
+```
+
+### Space Loss
+
+```{r}
+spaceLoss
+```
+
+### Information Rate
+
+```{r}
+informationRate
+```
+
+### Minimum Eb/N0
+
+```{r}
+minEbOverN0
+```
+
+### Irradiance
+
+```{r}
+irradiance
+```
+
+### Array G/T
+
+```{r}
+arrayGOverT
+```
+
+### Eb/N0
+
+```{r}
+ebOverN0
+```
+
+### Link Margin
+
+```{r}
+linkMargin
+```

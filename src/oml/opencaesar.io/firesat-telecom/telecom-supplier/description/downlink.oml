@@ -35,18 +35,21 @@ description <http://opencaesar.io/firesat-telecom/telecom-supplier/description/d
 	// Downlink Arrangement Quantities
 	// 
 	
+	@rdfs:label "frequency"
 	instance frequency : downlink:Frequency
 	instance frequency_1 : metrology:Frequency_Hz [
 		vim4:hasDoubleNumber "2.2E+9"^^xsd:double
 		vim4:isAttributedTo frequency
 	]
 	
+	@rdfs:label "space path length"
 	instance spacePathLength : downlink:SpacePathLength
 	instance spacePathLength_1 : metrology:PathLength_m [
 		vim4:hasDoubleNumber "2831E+3"^^xsd:double
 		vim4:isAttributedTo spacePathLength
 	]
 	
+	@rdfs:label "bit rate"
 	instance bitRate : downlink:BitRate
 	instance bitRate_1 : metrology:BitRate_bps [
 		vim4:hasDoubleNumber "85E+6"^^xsd:double
@@ -94,7 +97,7 @@ description <http://opencaesar.io/firesat-telecom/telecom-supplier/description/d
 	// Transmitter Quantities
 	//
 	
-	
+	@rdfs:label "effective isotropic radiated power"
 	instance effectiveIsotropicRadiatedPower : downlink:EffectiveIsotropicRadiatedPower
 	
 	//
@@ -103,6 +106,7 @@ description <http://opencaesar.io/firesat-telecom/telecom-supplier/description/d
 	//
 	//
 	
+	@rdfs:label "receiver 1"
 	instance receiver1 : downlink:Receiver [
 		downlink:hasGainOverSystemNoiseTemperature gainOverSystemNoiseTemperature1
 	]
@@ -111,6 +115,7 @@ description <http://opencaesar.io/firesat-telecom/telecom-supplier/description/d
 	// Receiver 1 Quantities
 	//
 	
+	@rdfs:label "receiver 1 G/T"
 	instance gainOverSystemNoiseTemperature1 : downlink:GainOverSystemNoiseTemperature
 	
 	instance gainOverSystemNoiseTemperature1_1 : metrology:GOverT_dBK [
@@ -124,6 +129,7 @@ description <http://opencaesar.io/firesat-telecom/telecom-supplier/description/d
 	//
 	//
 	
+	@rdfs:label "receiver 2"
 	instance receiver2 : downlink:Receiver [
 		downlink:hasGainOverSystemNoiseTemperature gainOverSystemNoiseTemperature2
 	]
@@ -132,6 +138,7 @@ description <http://opencaesar.io/firesat-telecom/telecom-supplier/description/d
 	// Receiver 2 Quantities
 	//
 	
+	@rdfs:label "receiver 2 G/T"
 	instance gainOverSystemNoiseTemperature2 : downlink:GainOverSystemNoiseTemperature
 	
 	instance gainOverSystemNoiseTemperature2_1 : metrology:GOverT_dBK [
@@ -145,6 +152,7 @@ description <http://opencaesar.io/firesat-telecom/telecom-supplier/description/d
 	//
 	//
 	
+	@rdfs:label "receiver 3"
 	instance receiver3 : downlink:Receiver [
 		downlink:hasGainOverSystemNoiseTemperature gainOverSystemNoiseTemperature3
 	]
@@ -153,6 +161,7 @@ description <http://opencaesar.io/firesat-telecom/telecom-supplier/description/d
 	// Receiver 3 Quantities
 	//
 	
+	@rdfs:label "receiver 3 G/T"
 	instance gainOverSystemNoiseTemperature3 : downlink:GainOverSystemNoiseTemperature
 	
 	instance gainOverSystemNoiseTemperature3_1 : metrology:GOverT_dBK [
