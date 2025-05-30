@@ -1,0 +1,510 @@
+---
+title: "A Gentle Introduction to State Analysis"
+author: "J S Jenkins"
+format:
+  revealjs:
+    width: 1600
+    height: 900
+editor: visual
+---
+
+```{r echo = FALSE}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(knitr)
+  library(magrittr)
+  library(DiagrammeR)
+  library(zoo)
+})
+
+source("src/r/link-margin.R")
+
+g_over_t_1 <- 16
+g_over_t_2 <- 16
+g_over_t_3 <- 20
+min_eb_n0 <- 9
+link_margin <- 3
+target_eb_n0 <- min_eb_n0 + link_margin
+space_loss <- -208
+eirp <- 18 # 63 W
+nom_bit_rate <- 50000
+
+duration <- 3 * 24 # 6 weeks in hours
+t <- tibble(
+  hours = 1:duration,
+  rads1 = hours / 24 * pi,
+  rads2 = rads1 + pi / 3,
+  rads3 = rads2 + pi / 3,
+  gOverT_1 = g_over_t_1 * sin(rads1)^6,
+  gOverT_2 = g_over_t_2 * sin(rads2)^6,
+  gOverT_3 = g_over_t_3 * sin(rads3)^6,
+  gOverT = dB(dBinv(gOverT_1) + dBinv(gOverT_2) + dBinv(gOverT_3)),
+  xmit_pwr = ifelse((hours %% 5) != 4, eirp, -Inf),
+  xmit_pwr_prev = lag(xmit_pwr),
+  xmit_cmd = ifelse(is.na(xmit_pwr_prev) | xmit_pwr_prev != xmit_pwr, ifelse(xmit_pwr == -Inf, "xmtr off", "xmtr_on"), NA),
+  irradiance = xmit_pwr + space_loss,
+  ctrl_bit_rate = dBinv(irradiance + gOverT + k_dB() - target_eb_n0),
+  bit_rate_cmd = ifelse(xmit_pwr == -Inf, NA, sprintf("bit rate %5.0f", ctrl_bit_rate)),
+  nom_eb_n0 = irradiance + gOverT + k_dB() - dB(nom_bit_rate),
+  nom_link_margin = nom_eb_n0 - min_eb_n0,
+  ctrl_eb_n0 = irradiance + gOverT + k_dB() - dB(ctrl_bit_rate),
+  ctrl_link_margin = ctrl_eb_n0 - min_eb_n0,
+  wx_loss = ifelse(hours >= 40 & hours < 50, -1, 0),
+  deg_gOverT_3 = (g_over_t_3 + wx_loss) * sin(rads3)^6,
+  deg_gOverT = dB(dBinv(gOverT_1) + dBinv(gOverT_2) + dBinv(deg_gOverT_3)),
+  meas_eb_n0 = irradiance + deg_gOverT + k_dB() - dB(ctrl_bit_rate),
+  meas_link_margin = meas_eb_n0 - min_eb_n0,
+  delta_link_margin = meas_link_margin - link_margin,
+) |> mutate(Gbit = cumsum(ctrl_bit_rate * 3600) / 1e9)
+```
+
+## Overview
+
+State Analysis is a principled approach to systems engineering, developed under the leadership of Robert Rasmussen, Ph.D., a Fellow (retired) of the Jet Propulsion Laboratory.
+
+The core ideas of state analysis follow from separation of concerns:
+
+-   System Under Control vs Control System
+
+-   Measurements, Estimates, Commands
+
+-   Constraints on State (i.e., control) vs Constraints on State Knowledge (i.e., estimation)
+
+-   Goals vs Tactics
+
+## A Simple Example
+
+We will illustrate key ideas from state analysis with a simple example: a telemetry system for a spacecraft in deep space. We are given a set of design parameters and assigned the task of designing a control system for a telemetry system consisting of a spaceborne transmitter and one or more earth-based receivers.
+
+## Start With The Transmitter
+
+Assume our transmitter has an Effective Isotropic Radiated Power of 63 W and it transmits data to earth at full power on a fixed cycle of four hours on, one hour off. We have just identified two *state variables*:
+
+-   transmitter on/off status
+
+-   transmitted power
+
+Moreover, we know that there is a causal relation between them. We can represent that relation in a *state effects diagram*.
+
+We also show that the on/off status is affected by *commands*.
+
+## Transmitter Power State Effects Diagram
+
+```{r echo = FALSE}
+xmtr_nodes <- tibble(
+  id = c(1,2,3,4),
+  type = NULL,
+  label = c("xmtr on/off", "xmtr power", "xmtr on cmd", "xmtr off cmd"),
+  width = 1.0,
+  shape = c(NA, NA, "polygon", "polygon"),
+  sides = c(NA, NA, 5, 5),
+  orientation = c(NA, NA, 180, 180)
+)
+xmtr_edges <- tibble(from = c(1, 3, 4), to = c(2, 1, 1))
+xmtr_graph <- create_graph(nodes_df = xmtr_nodes, edges_df = xmtr_edges)
+render_graph(xmtr_graph, height = 800, width = 1400)
+```
+
+## Transmitter Power State Effects Model
+
+We can state with precision the nature of the effect. We call this, not surprisingly, a *state effects model*. In this case it's simply
+
+-   when the transmitter is on, transmitted power is 63 W
+
+-   when the transmitter is off, transmitted power is 0 W
+
+Assume for the moment that the transmitter is on during hours 1-4 of each consecutive 5-hour period, and off during hour 5. (We will come back to how that comes to be.)
+
+## Transmitter Power Timeline
+
+State variables by definition may change over time. The 72-hour projected timeline of transmitted power is
+
+```{r echo = FALSE}
+plot(t$hours, dBinv(t$xmit_pwr), type = "s", xlab = "time (h)", ylab = "transmitted power (W)")
+```
+
+## Proceeding
+
+We will show other small state effects diagrams and eventually put them all together. For each small diagram there is a correspondingly small state effects model use for calculations. We won't bother to show the state effects models; they're standard telecom engineering doctrine.
+
+## Space Loss State Effects Diagram
+
+```{r echo = FALSE}
+spls_nodes <- tibble(
+  id = c(11, 12, 13),
+  type = NULL,
+  label = c("space path length", "frequency", "space loss"),
+  width = 1.0,
+  shape = NA,
+  sides = NA,
+  orientation = NA
+)
+spls_edges <- tibble(
+  from = c(11, 12),
+  to = c(13, 13)
+)
+spls_graph <- create_graph(nodes_df = spls_nodes, edges_df = spls_edges)
+render_graph(spls_graph, height = 800, width = 1400)
+```
+
+## Signal Strength on Earth
+
+Power flux density or irradiance on earth (W/m<sup>2</sup>) is determined by transmitted power and space loss.
+
+## Irradiance State Effects Diagram
+
+```{r}
+irrad_nodes <- rbind(
+  get_node_df(xmtr_graph),
+  get_node_df(spls_graph),
+  tibble(
+    id = 31,
+    type = NA,
+    label = "irradiance",
+    width = 1.0,
+    shape = NA,
+    sides = NA,
+    orientation = NA
+  )
+)
+irrad_edges <- rbind(
+  get_edge_df(xmtr_graph),
+  get_edge_df(spls_graph),
+  tibble(
+    id = NA,
+    from = c(2, 13),
+    to = c(31, 31),
+    rel = NA
+  )
+)
+irrad_graph <- create_graph(
+  nodes_df = irrad_nodes,
+  edges_df = irrad_edges,
+)
+render_graph(irrad_graph, height = 800, width = 1400)
+```
+
+## Irradiance Timeline
+
+```{r echo = FALSE}
+plot(t$hours, dBinv(t$irradiance), type = "s", xlab = "hour", ylab = "irradiance (W/m^2")
+```
+
+## Receiver Performance
+
+Let's assume we have three ground stations, equally distributed in longitude, and arrayed so that we can combine signal from two stations when the spacecraft is in view of both.
+
+Receiver performance is characterized by a single parameter called $G/T$ (gain over system noise temperature), usually expressed in dB/K. One station has a G/T of 20 dB/K, the others 16 dB/K.
+
+Our spacecraft moves slowly in azimuth relative to the rotation of the earth, so the timeline of our individual station's G/T is periodic.
+
+## Ground Station State Effects Diagram
+
+```{r echo = FALSE}
+grst_nodes <- tibble(
+  id = c(41, 42, 43, 44),
+  type = NA,
+  label = c("G/T 1", "G/T 2", "G/T 3", "array G/T"),
+  width = 1.0,
+  shape = NA,
+  sides = NA,
+  orientation = NA
+)
+grst_edges <- tibble(
+  from = c(41, 42, 43),
+  to = c(44, 44, 44)
+)
+grst_graph <- create_graph(nodes_df = grst_nodes, edges_df = grst_edges)
+render_graph(grst_graph, height = 800, width = 1400)
+```
+
+## Ground Station G/T Timelines
+
+```{r echo = FALSE}
+plot(t$hours, t$gOverT_3, type = "l", xlab = "hour", ylab = "G/T (dB/K)")
+lines(t$hours, t$gOverT_1, lty = 2)
+lines(t$hours, t$gOverT_2, lty = 3)
+```
+
+## Ground Station Array G/T Timeline
+
+```{r echo = FALSE}
+plot(t$hours, t$gOverT, type = "l", xlab = "hour", ylab = "G/T dB/K")
+```
+
+## Eb/N0
+
+The next key state variable is *energy per bit divided by noise power*, Eb/N0. It depends on irradiance, G/T, and bit rate, which is commanded. It corresponds to the signal "chopped up" into bits. The higher the bit rate, the lower the energy per bit.
+
+## Eb/N0 State Effects Diagram
+
+```{r echo = FALSE}
+ebn0_nodes = rbind(
+  get_node_df(irrad_graph),
+  get_node_df(grst_graph),
+  tibble(
+    id = c(51, 52),
+    type = NA,
+    label = c("Eb/N0", "bit rate"),
+    width = 1.0,
+    shape = NA,
+    sides = NA,
+    orientation = NA
+  ),
+  tibble(
+    id = c(53),
+    type = NA,
+    label = c("bit rate cmd"),
+    width = 1.0,
+    shape = "polygon",
+    sides = 5,
+    orientation = 100
+  )
+)
+ebn0_edges <- rbind(
+  get_edge_df(irrad_graph),
+  get_edge_df(grst_graph),
+  tibble(
+    id = NA,
+    from = c(31, 44, 52, 53),
+    to = c(51, 51, 51, 52),
+    rel = NA
+  )
+
+)
+ebn0_graph <- create_graph(
+  nodes_df = ebn0_nodes,
+  edges_df = ebn0_edges,
+)
+render_graph(ebn0_graph, height = 800, width = 1400)
+```
+
+## Eb/N0 Timeline
+
+Assume a nominal 50 kbit/s bit rate.
+
+```{r echo = FALSE}
+plot(t$hours, t$nom_eb_n0, type = "l", xlab = "time (h)", ylab = "Nominal Eb/N0 (dB)")
+```
+
+## Minimum Eb/N0
+
+Communications theory tells us that there is a relationship between bit error rate and minimum Eb/N0. For a bit error rate of 10<sup>-5</sup> with BPSK modulation, the required Eb/N0 is approximately 9 dB.
+
+## Minimum Eb/N0 State Effects Diagram
+
+```{r echo = FALSE}
+rqen_nodes <- tibble(
+  id = c(61, 62),
+  type = NA,
+  label = c("bit error rate", "min Eb/N0"),
+  width = 1.0,
+  shape = NA,
+  sides = NA,
+  orientation = NA
+)
+rqen_edges <- tibble(
+  id = NA,
+  from = c(61),
+  to = c(62),
+  rel = NA
+)
+rqen_graph <- create_graph(
+  nodes_df = rqen_nodes,
+  edges_df = rqen_edges
+)
+render_graph(rqen_graph, height = 800, width = 1400)
+```
+
+## Link Margin
+
+Link margin is the difference between Eb/N0 and the required Eb/N0. This completes the state effects diagram
+
+## Full State Effects Diagram
+
+```{r}
+new_nodes_df <- data_frame(id = c(40), type = NA, label = c("link margin"))
+new_edges_df <- data_frame(from = c(20,31), to = c(40,40))
+syst_nodes <- rbind(
+  get_node_df(ebn0_graph),
+  get_node_df(rqen_graph),
+  tibble(
+    id = c(71),
+    type = NA,
+    label = c("link margin"),
+    width = 1.0,
+    shape = NA,
+    sides = NA,
+    orientation = NA
+  )
+)
+syst_edges <- rbind(
+  get_edge_df(ebn0_graph),
+  get_edge_df(rqen_graph),
+  tibble(
+    id = NA,
+    from = c(51, 62),
+    to = c(71, 71),
+    rel = NA
+  )
+)
+syst_graph <- create_graph(
+  nodes_df = syst_nodes,
+  edges_df = syst_edges
+)
+render_graph(syst_graph, height = 800, width = 1400)
+```
+
+## Maintaining Link Margin
+
+Our customer wants us to maintain a 3 dB link margin. At a fixed 50 kbit/s bit rate, for example, we don't always meet the requirement.
+
+```{r echo = FALSE}
+plot(t$hours, t$nom_link_margin, type = "l", ylim = c(-6, 6), xlab = "hour", ylab = "link margin at 50 kbit/s (dB)")
+abline(h = 3, lty = 2)
+```
+
+## Controlling Bit Rate
+
+Assume that the bit rate on the transmitter and receiver can be easily and instantly changed. We need to define a control algorithm to ensure that we maintain our link rate.
+
+Initially, we can use our state effects model to develop an open-loop controller for bit rate.
+
+```{r echo = FALSE}
+plot(t$hours, t$ctrl_bit_rate / 1000, type = "s", xlab = "hour", ylab = "bit rate (kbit/s)")
+```
+
+## Sample Commands Generated
+
+```{r}
+#| layout-ncol: 2
+knitr::kable(
+  t |> filter(hours < 20) |>
+    filter(!is.na(xmit_cmd)) |>
+    select(hours, xmit_cmd)
+)
+knitr::kable(
+  t |> filter(hours < 11) |>
+    filter(!is.na(bit_rate_cmd)) |>
+    select(hours, bit_rate_cmd)
+)
+```
+
+## Controlled Link Margin
+
+```{r echo = FALSE}
+plot(t$hours, t$ctrl_link_margin, type = "l", xlab = "hour", ylab = "link margin (dB)")
+```
+
+## Cumulative Data Delivery
+
+```{r echo = FALSE}
+plot(t$hours, t$Gbit, type = "l", xlab = "hour", ylab = "cumulative data (Gbit)")
+```
+
+# Complications
+
+## Weather Loss
+
+Weather at a ground station can degrade its sensitivity. For simplicity, we add a state variable that represents aggregate weather loss at all three stations.
+
+## State Effects Diagram with Weather Loss
+
+```{r echo = FALSE}
+wx_nodes <- rbind(
+  get_node_df(syst_graph),
+  tibble(
+    id = 81,
+    type = NA,
+    label = "wx loss",
+    width = 1.0,
+    shape = NA,
+    sides = NA,
+    orientation = NA
+  )
+)
+wx_edges <- rbind(
+  get_edge_df(syst_graph),
+  tibble(
+    id = NA,
+    from = 81,
+    to = 44,
+    rel = NA
+  )
+)
+wx_graph <- create_graph(wx_nodes, wx_edges)
+render_graph(wx_graph, height = 800, width = 1400)
+```
+
+## State Effects Diagram with Measurement
+
+```{r echo = FALSE}
+mlm_nodes = rbind(
+  get_node_df(wx_graph),
+  tibble(
+    id = 91,
+    type = NA,
+    label = "link margin",
+    width = 1.0,
+    shape = "polygon",
+    sides = 5,
+    orientation = 0
+  )
+)
+mlm_edges <- rbind(
+  get_edge_df(wx_graph),
+  tibble(
+    id = NA,
+    from = 71,
+    to = 91,
+    rel = NA
+  )
+)
+mlm_graph <- create_graph(mlm_nodes, mlm_edges)
+render_graph(mlm_graph, height = 800, width = 1400)
+```
+
+## Measured Link Margin
+
+There is a weather event between hours 40 and 50; we see the effect on link margin.
+
+```{r echo = FALSE}
+plot(t$hours, t$meas_link_margin, type = "l", ylim = c(-3, 6), xlab = "hour", ylab = "measured link margin (dB)")
+```
+
+## Estimated Weather Loss
+
+All other things being equal, we can construct an estimator for weather loss from deviations in link margin. This is a two-deep rolling average estimate.
+
+```{r echo = FALSE}
+t <- t |>
+  mutate(wx_loss_hat = rollmean(
+         replace(delta_link_margin, is.nan(delta_link_margin), lag(delta_link_margin)[is.nan(delta_link_margin)]),
+         k = 2, fill = 0, align = "right"))
+plot(t$hours, t$wx_loss_hat, type = "l", xlab = "hour", ylab = "estimated weather loss (dB)")
+```
+
+## Compensated Bit Rate
+
+We reduce the commanded bit rate in compensation for weather loss.
+
+```{r echo = FALSE}
+t$comp_bit_rate = dBinv(dB(t$ctrl_bit_rate) + t$wx_loss_hat)
+plot(t$hours[40:50], t$ctrl_bit_rate[40:50] / 1000, type = "s", xlab = "hour", ylab = "bit rate (kbit/s)")
+lines(t$hours, t$comp_bit_rate / 1000, type = "s", lty = 2)
+```
+
+## Compensated Link Margin
+
+```{r echo = FALSE}
+t$comp_link_margin = t$meas_link_margin - t$wx_loss_hat
+plot(t$hours, t$meas_link_margin, type = "l", ylim = c(0, 6), xlab = "hour", ylab = "link margin (dB)")
+lines(t$hours, t$comp_link_margin, type = "l", lty = 2)
+abline(h = 3, lty = 3)
+```
+
+## Recap
+
+```{r echo = FALSE}
+render_graph(mlm_graph, height = 800, width = 1400)
+```
