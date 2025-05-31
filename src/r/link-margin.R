@@ -28,7 +28,7 @@ minEbOverN0 <- function(bitErrorRate, encodingScheme) {
 irradiance <- function(effectivePower, spaceLoss) {
   if (effectivePower$unit != "dBW") stop("invalid effective power unit")
   if (spaceLoss$unit != "dB") stop("invalid space loss unit")
-  list(value = effectivePower$value + spaceLoss$value, unit = "dBW/m^2") # is this right?
+  list(value = effectivePower$value + spaceLoss$value, unit = "dB") # is this right?
 }
 
 arrayGOverT <- function(...) {
@@ -40,7 +40,7 @@ arrayGOverT <- function(...) {
 k_dB <- function() { dB(1.380649e+23) }
 ebOverN0 <- function(gOverT, irradiance, bitRate) {
   if (gOverT$unit != "dB/K") stop("invalid G/T unit")
-  if (irradiance$unit != "dBW/m^2") stop("invalid irradiance unit")
+  if (irradiance$unit != "dB") stop("invalid irradiance unit")
   if (bitRate$unit != "hertz") stop("invalid bit rate unit")
   list(value = irradiance$value + gOverT$value + k_dB() - dB(bitRate$value), unit = "dB")
 }
