@@ -357,7 +357,8 @@ render_graph(syst_graph, height = 800, width = 1400)
 
 ## Maintaining Link Margin
 
-Our customer wants us to maintain a 3 dB link margin. At a fixed 50 kbit/s bit rate, for example, we don't always meet the requirement.
+Our customer wants us to maintain a 3 dB link margin. At a fixed 50 kbit/s bit rate, for example, we don't always meet the requirement. It state analysis parlance,
+we set a _goal_ of maintaining a link margin not less than 3 dB.
 
 ```{r echo = FALSE}
 plot(t$hours, t$nom_link_margin, type = "l", ylim = c(-6, 6), xlab = "hour", ylab = "link margin at 50 kbit/s (dB)")
@@ -366,7 +367,8 @@ abline(h = 3, lty = 2)
 
 ## Controlling Bit Rate
 
-Assume that the bit rate on the transmitter and receiver can be easily and instantly changed. We need to define a control algorithm to ensure that we maintain our link rate.
+Assume that the bit rate on the transmitter and receiver can be easily and instantly changed. We can elaborate our goal on link margin
+to a goal on bit rate. A controller will generate bit rate commands.
 
 Initially, we can use our state effects model to develop an open-loop controller for bit rate.
 
@@ -508,3 +510,22 @@ abline(h = 3, lty = 3)
 ```{r echo = FALSE}
 render_graph(mlm_graph, height = 800, width = 1400)
 ```
+
+## Automating Computations
+
+Our State Effects Diagram is a directed acyclic graph. As such it can serve as a map for computation. Each node in the graph can be mapped to one or more state effects models. The models may vary in language, accuracy, runtime, expense, etc.
+
+We can traverse the graph depth first to orchestrate computations of system-level metrics. Among other things, this approach gives us confidence that our computations are consistent with our system model.
+
+For example:
+
+```
+xmtr_power = get_xmtr_power(xmtr_on_off_status)
+space_loss = get_space_path_loss(space_path_length, frequency)
+irradiance = get_irradiance(xmtr_power, space_loss)
+array_g_t  = get_array_g_t(g_t_1, g_t_2, g_t_3)
+eb_n0      = get_eb_n0(irradiance, array_g_t, bit_rate)
+...
+```
+
+Software build tools (e.g., Make, Gradle) and continuous integration practices  simplify caching of expensive computations and minimizing rework.
