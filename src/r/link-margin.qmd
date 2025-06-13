@@ -67,6 +67,9 @@ o <- data.frame(quantity = names(topo_sort(ograph)), order = 1:length(V(ograph))
 knitr::kable(o)
 ```
 
+
+
+
 ### Calculation Wrapper
 
 ```{r}
@@ -111,6 +114,29 @@ se_edges_df <- create_edge_df(from = match(se_el[,1], se_nodes_df$label), to = m
 se_g <- create_graph(nodes_df = se_nodes_df, edges_df = se_edges_df)
 render_graph(se_g)
 ```
+
+### Visualize Ograph
+
+
+```{r}
+library(visNetwork)
+library(tidyr)
+
+data <- toVisNetworkData(ograph)
+visnodes <- data$nodes %>%
+  mutate(label = sub(".*#", "", label)) %>% 
+  mutate(id = factor(id, levels = o$quantity)) %>%
+  arrange(id)
+
+visedges <- data$edges %>% 
+  mutate(arrows = c("to")) 
+
+visNetwork(nodes = visnodes, edges = visedges) %>%
+  visHierarchicalLayout(direction = "RL")
+
+
+```
+
 
 ## State Effects Models in R
 
