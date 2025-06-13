@@ -1,0 +1,14 @@
+PREFIX analysis:	<http://imce.jpl.nasa.gov/foundation/analysis#>
+PREFIX constraint:	<http://opencaesar.io/firesat-telecom/telecom-supplier/vocabulary/constraint#>
+PREFIX rdfs:		<http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?parent ?child ?type
+WHERE {
+  VALUES ?relationType {analysis:explains analysis:analyzes}
+
+  ?parent a constraint:CausalConstraint;
+  OPTIONAL{
+    ?parent ?relationType ?child;
+  }
+  BIND(STRAFTER(STR(?relationType), "#") AS ?type) .
+}
